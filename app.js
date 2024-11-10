@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 const path = require("path");
 const exphbs = require("express-handlebars");
 
-const homeRouter = require("./routes/home.route"); 
+const homeRouter = require("./routes/home.route");
+const usermangementRouter = require("./routes/usermangement.route");
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use(express.json());
 
 const port = process.env.PORT_NO;
 app.use("/", homeRouter);
+app.use("/user", usermangementRouter);
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
