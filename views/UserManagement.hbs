@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: #f5b6d0;
+            padding: 3rem;
+            padding-top: 4rem;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            color: black;
+        }
+
+        th,
+        td {
+            text-align: center;
+            padding: 8px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="search-bar">
+            <h3>User Management</h3>
+            <input type="text" id="searchInput" class="form-control" style="width: 200px;" placeholder="Search Users"
+                onkeyup="searchUsers()">
+        </div>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                <!-- User rows will be injected here via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Sample user data (Replace with actual user data from server)
+        const users = [
+            { id: 1, username: 'john_doe', email: 'john@example.com' },
+            { id: 2, username: 'jane_doe', email: 'jane@example.com' },
+            { id: 3, username: 'alice_smith', email: 'alice@example.com' },
+            { id: 4, username: 'bob_jones', email: 'bob@example.com' }
+        ];
+
+        // Function to display the user table
+        function loadUserTable() {
+            const tableBody = document.getElementById('userTableBody');
+            tableBody.innerHTML = ''; // Clear previous content
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td><button class="btn btn-danger" onclick="deleteUser(${user.id})">Delete</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to delete a user
+        function deleteUser(userId) {
+            const userIndex = users.findIndex(user => user.id === userId);
+            if (userIndex !== -1) {
+                users.splice(userIndex, 1); // Remove user from array
+                loadUserTable(); // Re-load the table after deletion
+            }
+        }
+
+        // Search function to filter users
+        function searchUsers() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const filteredUsers = users.filter(user => {
+                return user.username.toLowerCase().includes(searchValue) || user.email.toLowerCase().includes(searchValue);
+            });
+            displayFilteredUsers(filteredUsers);
+        }
+
+        // Function to display filtered users
+        function displayFilteredUsers(filteredUsers) {
+            const tableBody = document.getElementById('userTableBody');
+            tableBody.innerHTML = ''; // Clear previous content
+            filteredUsers.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td><button class="btn btn-danger" onclick="deleteUser(${user.id})">Delete</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Load the user table initially
+        loadUserTable();
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
