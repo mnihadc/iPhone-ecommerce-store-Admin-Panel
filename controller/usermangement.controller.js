@@ -13,5 +13,20 @@ const getUserMangementPage = async (req, res) => {
     res.status(500).send("An error occurred");
   }
 };
+const deleteUser = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const result = await User.findByIdAndDelete(userId);
 
-module.exports = getUserMangementPage;
+    if (result) {
+      res.status(200).json({ message: "User deleted successfully" });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).send("An error occurred");
+  }
+};
+
+module.exports = { getUserMangementPage, deleteUser };
