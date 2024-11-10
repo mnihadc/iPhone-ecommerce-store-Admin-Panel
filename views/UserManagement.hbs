@@ -4,19 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management</title>
+    <title>{{title}}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
     <style>
         body {
             background: #f5b6d0;
-            /* Rose-colored background for the body */
             color: white;
-            /* White text color for the entire body */
         }
 
         .container {
             background: #000000;
-            /* Black background for the container */
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -26,10 +23,8 @@
             width: 100%;
             margin-top: 20px;
             border: 1px solid #ccc;
-            /* Light gray border around the table */
             border-collapse: collapse;
             background: #000000;
-            /* Black background for the table */
         }
 
         th,
@@ -37,26 +32,20 @@
             text-align: center;
             padding: 12px;
             border: 1px solid #ccc;
-            /* Gray border for table rows and columns */
         }
 
         th {
             background-color: #333;
-            /* Dark gray background for header */
             color: white;
-            /* White text for header */
         }
 
         tr:nth-child(even) {
             background-color: #f2f2f2;
-            /* Light gray background for even rows */
         }
 
         tr:nth-child(odd) {
             background-color: #333;
-            /* Dark background for odd rows */
             color: white;
-            /* White text for odd rows */
         }
 
         .search-bar {
@@ -70,7 +59,6 @@
             background-color: #ff4d4d;
             border: none;
             color: white;
-            /* White text for the button */
             padding: 8px 15px;
             font-size: 14px;
             border-radius: 5px;
@@ -101,69 +89,36 @@
                 </tr>
             </thead>
             <tbody id="userTableBody">
-                <!-- User rows will be injected here via JavaScript -->
+                {{log users}} <!-- Logs 'users' to verify data is available -->
+                {{#each users}}
+                <tr>
+                    <td>{{this._id}}</td>
+                    <td>{{this.username}}</td>
+                    <td>{{this.email}}</td>
+                    <td><button class="btn btn-danger" onclick="deleteUser('{{this._id}}')">Delete</button></td>
+                </tr>
+                {{/each}}
             </tbody>
         </table>
     </div>
 
     <script>
-        const users = [
-            { id: 1, username: 'john_doe', email: 'john@example.com' },
-            { id: 2, username: 'jane_doe', email: 'jane@example.com' },
-            { id: 3, username: 'alice_smith', email: 'alice@example.com' },
-            { id: 4, username: 'bob_jones', email: 'bob@example.com' }
-        ];
-
-        function loadUserTable() {
-            const tableBody = document.getElementById('userTableBody');
-            tableBody.innerHTML = '';  // Clear previous content
-            users.forEach(user => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${user.id}</td>
-                    <td>${user.username}</td>
-                    <td>${user.email}</td>
-                    <td><button class="btn btn-danger" onclick="deleteUser(${user.id})">Delete</button></td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
         function deleteUser(userId) {
             if (confirm("Are you sure you want to delete this user?")) {
-                const userIndex = users.findIndex(user => user.id === userId);
-                if (userIndex !== -1) {
-                    users.splice(userIndex, 1);  // Remove user from array
-                    loadUserTable();  // Re-load the table after deletion
-                }
+                // Send a delete request to the server here using userId
+                console.log("Delete user with ID:", userId);
             }
         }
 
         function searchUsers() {
             const searchValue = document.getElementById('searchInput').value.toLowerCase();
-            const filteredUsers = users.filter(user => {
-                return user.username.toLowerCase().includes(searchValue) || user.email.toLowerCase().includes(searchValue);
-            });
-            displayFilteredUsers(filteredUsers);
-        }
-
-        function displayFilteredUsers(filteredUsers) {
-            const tableBody = document.getElementById('userTableBody');
-            tableBody.innerHTML = '';  // Clear previous content
-            filteredUsers.forEach(user => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${user.id}</td>
-                    <td>${user.username}</td>
-                    <td>${user.email}</td>
-                    <td><button class="btn btn-danger" onclick="deleteUser(${user.id})">Delete</button></td>
-                `;
-                tableBody.appendChild(row);
+            const rows = document.querySelectorAll('#userTableBody tr');
+            rows.forEach(row => {
+                const username = row.cells[1].innerText.toLowerCase();
+                const email = row.cells[2].innerText.toLowerCase();
+                row.style.display = (username.includes(searchValue) || email.includes(searchValue)) ? '' : 'none';
             });
         }
-
-        // Load the user table initially
-        loadUserTable();
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

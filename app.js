@@ -3,13 +3,19 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const path = require("path");
 const exphbs = require("express-handlebars");
+const {
+  allowInsecurePrototypeAccess,
+} = require("@handlebars/allow-prototype-access");
+const handlebars = require("handlebars");
 
 const homeRouter = require("./routes/home.route");
 const usermangementRouter = require("./routes/usermangement.route");
 
 const app = express();
-
 dotenv.config();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -24,6 +30,7 @@ app.engine(
   exphbs.engine({
     extname: "hbs",
     defaultLayout: "main",
+    handlebars: allowInsecurePrototypeAccess(handlebars), // Add this line
     layoutsDir: path.join(__dirname, "views", "layouts"),
   })
 );
@@ -31,13 +38,10 @@ app.engine(
 app.set("view engine", "hbs");
 
 app.use(express.static(path.join(__dirname, "public")));
-
-app.use(express.json());
-
 const port = process.env.PORT_NO;
 app.use("/", homeRouter);
 app.use("/user", usermangementRouter);
-// Start the server
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
