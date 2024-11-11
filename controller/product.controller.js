@@ -86,9 +86,54 @@ const editProductPage = async (req, res, next) => {
   }
 };
 
+const updateProduct = async (req, res, next) => {
+  try {
+    const {
+      name,
+      category,
+      description,
+      price,
+      offerPrice,
+      stock,
+      releaseDate,
+      colorName,
+      colorCode,
+      specifications,
+      colorImages,
+      productImages,
+    } = req.body;
+
+    // Prepare color options array
+    const colorOptions = colorName.map((name, index) => ({
+      colorName: name,
+      colorCode: colorCode[index],
+      colorImage: colorImages[index] || "",
+    }));
+
+    const updatedData = {
+      name,
+      category,
+      description,
+      price,
+      offerPrice,
+      stock,
+      releaseDate,
+      colorOptions,
+      productImages: productImages || [],
+      specifications,
+    };
+
+    await Product.findByIdAndUpdate(req.params.id, updatedData);
+    res.redirect("/product/get-product");
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getCreateProductPage,
   CreateProduct,
   getProductPage,
   editProductPage,
+  updateProduct,
 };
