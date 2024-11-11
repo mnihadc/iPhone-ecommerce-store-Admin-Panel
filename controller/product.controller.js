@@ -17,18 +17,16 @@ const CreateProduct = async (req, res, next) => {
       colorName,
       colorCode,
       specifications,
-      colorImages, // Get color images URLs directly from the form
+      colorImages,
     } = req.body;
 
-    // Process color options
     const colorOptions = colorName.map((name, index) => ({
       colorName: name,
       colorCode: colorCode[index],
-      colorImage: colorImages[index] || "", // Directly use the URL from the form
+      colorImage: colorImages[index] || "",
     }));
 
-    // Process product images (URLs)
-    const productImages = req.body.productImages || []; // Assuming productImages[] are URLs as well
+    const productImages = req.body.productImages || [];
 
     const newProduct = new Product({
       name,
@@ -44,11 +42,9 @@ const CreateProduct = async (req, res, next) => {
     });
 
     await newProduct.save();
-    res
-      .status(201)
-      .json({ message: "Product added successfully", product: newProduct });
+    res.redirect("/product/create-product");
   } catch (error) {
-    next(error); // Handle error properly
+    next(error);
   }
 };
 
