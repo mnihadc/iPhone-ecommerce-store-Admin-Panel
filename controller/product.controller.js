@@ -68,4 +68,27 @@ const getProductPage = async (req, res, next) => {
   });
 };
 
-module.exports = { getCreateProductPage, CreateProduct, getProductPage };
+const editProductPage = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).send("Product not found");
+    }
+    const categories = product.category;
+    res.render("EditProduct", {
+      title: "Edit Product",
+      isProductPage: true,
+      product,
+      categories,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  getCreateProductPage,
+  CreateProduct,
+  getProductPage,
+  editProductPage,
+};
