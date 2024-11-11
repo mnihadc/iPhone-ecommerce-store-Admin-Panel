@@ -10,7 +10,7 @@ const handlebars = require("handlebars");
 
 const homeRouter = require("./routes/home.route");
 const usermangementRouter = require("./routes/usermangement.route");
-
+const productRouter = require("./routes/product.route");
 const app = express();
 dotenv.config();
 
@@ -41,6 +41,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const port = process.env.PORT_NO;
 app.use("/", homeRouter);
 app.use("/user", usermangementRouter);
+app.use("/product", productRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

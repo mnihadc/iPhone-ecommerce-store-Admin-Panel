@@ -8,18 +8,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #1d1c1c;
-            color: #fff;
+            background: #1d1c1c;
             font-family: 'Arial', sans-serif;
         }
 
         .container {
-            background-color: #333;
+            background: #333;
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
             max-width: 900px;
-            margin-top: 40px;
         }
 
         h3 {
@@ -67,6 +65,19 @@
         .add-color-btn:hover,
         .add-spec-btn:hover {
             background-color: #218838;
+        }
+
+        /* Ensuring all backgrounds in the container are dark */
+        .container,
+        .container .form-group,
+        .container .form-control,
+        .container input[type="file"],
+        .container input[type="text"],
+        .container select,
+        .container textarea {
+            background-color: #333 !important;
+            color: #fff !important;
+            border-color: #555 !important;
         }
     </style>
 </head>
