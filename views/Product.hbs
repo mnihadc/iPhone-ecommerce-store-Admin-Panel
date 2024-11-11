@@ -6,22 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Products</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
+
 </head>
 
-<body>
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Product List</h2>
+<body style="background: black;">
+    <div class="container">
+        <h2 class="text-center" style="color: rgb(93, 93, 243);">Product List</h2>
         <table class="table table-bordered table-dark table-hover">
-            <thead>
+            <thead style="border-bottom: 3px solid black;">
                 <tr>
+                    <th>ID</th>
                     <th>Name</th>
                     <th>Category</th>
+                    <th>Description</th>
                     <th>Price</th>
                     <th>Offer Price</th>
                     <th>Stock</th>
-                    <th>Images</th>
-                    <th>Colors</th>
-                    <th>Specifications</th>
+                    <th>Color</th>
                     <th>Release Date</th>
                     <th>Actions</th>
                 </tr>
@@ -29,36 +30,35 @@
             <tbody>
                 {{#each products}}
                 <tr>
+                    <td>{{this._id}}</td>
                     <td>{{this.name}}</td>
                     <td>{{this.category}}</td>
+                    <td>{{this.description}}</td>
                     <td>${{this.price}}</td>
                     <td>{{#if this.offerPrice}} ${{this.offerPrice}} {{else}} N/A {{/if}}</td>
                     <td>{{this.stock}}</td>
                     <td>
-                        {{#each this.productImages}}
-                        <img src="{{this}}" alt="Product Image" style="width: 50px; height: auto;">
+                        {{#each this.colorOptions}}
+                        <p>{{this.colorName}} <span style=" background-color: {{this.colorCode}}; width: 20px; height: 20px; display:
+                inline-block;"></span>
+                        </p>
                         {{/each}}
                     </td>
+                    <td>{{this.formattedReleaseDate}}</td>
                     <td>
-                        {{#each ../this.colorOptions}}
-                        <div
-                            style="background-color: {{this.colorCode}}; width: 20px; height: 20px; display: inline-block;">
-                        </div>
-                        {{/each}}
-                    </td>
-                    <td>
-                        <ul>
-                            {{#each ../this.specifications}}
-                            <li><strong>{{@key}}:</strong> {{this}}</li>
-                            {{/each}}
-                        </ul>
-                    </td>
-                    <td>{{this.releaseDate}}</td>
-                    <td>
-                        <button class="btn btn-primary btn-sm">Edit</button>
-                        <button class="btn btn-danger btn-sm">Delete</button>
+                        <button class="btn btn-primary btn-sm mt-2">Edit</button>
+                        <button class="btn btn-danger btn-sm mt-2">Delete</button>
                     </td>
                 </tr>
+                <tr class="spec-row" style="border-bottom: 3px solid black;">
+                    <td colspan="9">
+                        <strong>Specifications:</strong>
+                        {{#each this.specifications}}
+                        <span><strong>{{@key}}:</strong> {{this}}; </span>
+                        {{/each}}
+                    </td>
+                </tr>
+
                 {{/each}}
             </tbody>
         </table>

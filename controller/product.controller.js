@@ -48,4 +48,24 @@ const CreateProduct = async (req, res, next) => {
   }
 };
 
-module.exports = { getCreateProductPage, CreateProduct };
+const getProductPage = async (req, res, next) => {
+  const productData = await Product.find({});
+  productData.forEach((product) => {
+    if (product.releaseDate) {
+      product.formattedReleaseDate = new Date(
+        product.releaseDate
+      ).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    }
+  });
+  res.render("Product", {
+    title: "Product Details",
+    isProductPage: true,
+    products: productData,
+  });
+};
+
+module.exports = { getCreateProductPage, CreateProduct, getProductPage };
