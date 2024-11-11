@@ -1,75 +1,22 @@
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  category: {
-    type: String,
-    required: true,
-    enum: [
-      "iPhone",
-      "iPad",
-      "MacBook",
-      "Apple Watch",
-      "AirPods",
-      "Accessories",
-    ],
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  offerPrice: {
-    type: Number,
-    min: 0,
-    default: null,
-  },
-  stock: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
+  name: { type: String, required: true },
+  category: { type: String, required: true },
+  description: { type: String, required: true },
+  price: { type: Number, required: true },
+  offerPrice: { type: Number },
+  stock: { type: Number, required: true },
+  productImages: { type: [String], required: true }, // Array of URLs
   colorOptions: [
     {
-      colorName: String,
-      colorCode: String,
-      images: [String],
+      colorName: { type: String, required: true },
+      colorCode: { type: String, required: true },
+      colorImage: { type: String }, // Single URL
     },
   ],
-  specifications: {
-    processor: String,
-    memory: String,
-    storage: String,
-    displaySize: String,
-    camera: String,
-    battery: String,
-    connectivity: [String],
-  },
-  releaseDate: {
-    type: Date,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-// Auto update 'updatedAt' on document update
-productSchema.pre("save", function (next) {
-  this.updatedAt = Date.now();
-  next();
+  specifications: { type: Object, required: true },
+  releaseDate: { type: Date },
 });
 
 const Product = mongoose.model("Product", productSchema);
