@@ -10,7 +10,7 @@
 
 <body style="background: black;">
     <div class="container">
-        <h2 class="text-center" style="color: rgb(93, 93, 243);">Product List</h2>
+        <h2 class="text-center" style="color: rgb(17, 127, 158);">Product List</h2>
 
         <!-- Search Bar -->
         <div class="form-group">
@@ -19,7 +19,7 @@
         </div>
 
         <table class="table table-bordered table-dark table-hover">
-            <thead>
+            <thead style="border-bottom: 3px solid black;">
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
@@ -52,9 +52,10 @@
                     </td>
                     <td>{{this.formattedReleaseDate}}</td>
                     <td>
-                        <a href="/product/edit-product/{{this._id}}" class="btn btn-primary btn-sm mt-2">Edit</a>
+                        <a href="/product/edit-product/{{this._id}}" class="btn btn-primary btn-sm">Edit</a>
 
-                        <button class="btn btn-danger btn-sm mt-2">Delete</button>
+                        <button onclick="deleteProduct('{{this._id}}')"
+                            class="btn btn-danger btn-sm mt-2">Delete</button>
                     </td>
                 </tr>
                 <tr class="spec-row" style="border-bottom: 3px solid black;">
@@ -95,6 +96,21 @@
                 }
             }
         }
+
+        function deleteProduct(productId) {
+            fetch(`/product/delete-product/${productId}`, {
+                method: 'POST'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Product is Deleted")
+                        window.location.href = '/product/get-product';
+                    } else {
+                        alert('Failed to delete product');
+                    }
+                });
+        }
+
     </script>
 
 </body>

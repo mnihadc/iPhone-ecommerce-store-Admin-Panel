@@ -130,10 +130,23 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
+const deleteProduct = async (req, res, next) => {
+  try {
+    const product = await Product.findByIdAndDelete(req.params.id);
+    if (!product) {
+      return res.status(404).send("Product not found");
+    }
+    res.redirect("/product/get-product");
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getCreateProductPage,
   CreateProduct,
   getProductPage,
   editProductPage,
   updateProduct,
+  deleteProduct,
 };
