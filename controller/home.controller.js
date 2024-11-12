@@ -11,4 +11,19 @@ const getLoginPage = (req, res, next) => {
     isLoginPage: true,
   });
 };
-module.exports = { getHomePage, getLoginPage };
+const Login = (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const emailData = process.env.email;
+    const passwordData = process.env.password;
+    if (emailData === email && passwordData === password) {
+      res.redirect("/");
+    } else {
+      return res.status(404).send("Invalid email or password");
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getHomePage, getLoginPage, Login };
