@@ -7,12 +7,13 @@ const {
   updateProduct,
   deleteProduct,
 } = require("../controller/product.controller");
+const verifyToken = require("../middleware/verifyToken");
 const router = express.Router();
 
-router.get("/create-product", getCreateProductPage);
+router.get("/create-product", verifyToken, getCreateProductPage);
 router.post("/add-product", CreateProduct);
-router.get("/get-product", getProductPage);
-router.get("/edit-product/:id", editProductPage);
+router.get("/get-product", verifyToken, getProductPage);
+router.get("/edit-product/:id", verifyToken, editProductPage);
 router.post("/update-product/:id", updateProduct);
 router.post("/delete-product/:id", deleteProduct);
 

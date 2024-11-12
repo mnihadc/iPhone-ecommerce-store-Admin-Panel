@@ -37,4 +37,18 @@ const Login = (req, res, next) => {
   }
 };
 
-module.exports = { getHomePage, getLoginPage, Login };
+const Logout = (req, res, next) => {
+  try {
+    res.clearCookie("authToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    res.redirect("/get-login");
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getHomePage, getLoginPage, Login, Logout };
