@@ -4,9 +4,10 @@ const {
   getLoginPage,
   Login,
 } = require("../controller/home.controller");
+const verifyToken = require("../middleware/verifyToken");
 const router = express.Router();
 
-router.get("/", getHomePage);
+router.get("/", verifyToken, getHomePage);
 router.get("/get-login", getLoginPage);
 router.post("/login", Login);
 
