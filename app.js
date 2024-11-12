@@ -38,6 +38,7 @@ app.engine(
 app.set("view engine", "hbs");
 
 app.use(express.static(path.join(__dirname, "public")));
+
 const port = process.env.PORT_NO;
 app.use("/", homeRouter);
 app.use("/user", usermangementRouter);

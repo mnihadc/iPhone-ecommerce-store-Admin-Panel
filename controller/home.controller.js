@@ -5,4 +5,10 @@ const getHomePage = (req, res, next) => {
   });
 };
 
-module.exports = { getHomePage };
+const getLoginPage = (req, res, next) => {
+  res.render("Login", {
+    title: "Login page",
+    isLoginPage: true,
+  });
+};
+module.exports = { getHomePage, getLoginPage };
