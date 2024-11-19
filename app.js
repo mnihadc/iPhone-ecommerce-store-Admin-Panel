@@ -31,11 +31,15 @@ app.engine(
   exphbs.engine({
     extname: "hbs",
     defaultLayout: "main",
-    handlebars: allowInsecurePrototypeAccess(handlebars), // Add this line
+    handlebars: allowInsecurePrototypeAccess(handlebars),
     layoutsDir: path.join(__dirname, "views", "layouts"),
+    helpers: {
+      json: function (context) {
+        return JSON.stringify(context);
+      },
+    },
   })
 );
-
 app.set("view engine", "hbs");
 
 app.use(express.static(path.join(__dirname, "public")));

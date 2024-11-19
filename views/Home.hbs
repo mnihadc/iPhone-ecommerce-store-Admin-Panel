@@ -91,7 +91,7 @@
                         <div class="card">
                             <div class="card-header">Sales Growth</div>
                             <div class="card-body">
-                                <p>+28% This Month</p>
+                                <p>{{salesGrowth}}%</p>
                                 <small>Increase in sales compared to last month.</small>
                             </div>
                         </div>
@@ -101,7 +101,7 @@
                         <div class="card">
                             <div class="card-header">Recent Orders</div>
                             <div class="card-body">
-                                <p>47 new orders</p>
+                                <p>{{totalOrders}}</p>
                                 <small>Orders placed in the last 24 hours.</small>
                             </div>
                         </div>
@@ -119,6 +119,9 @@
     </div>
 
     <script>
+        // Fetch the dynamic data passed from the backend (monthlySales array)
+        const monthlySales = {{ json monthlySales }};  // {{json}} is used to stringify the array
+
         const ctx = document.getElementById('performanceChart').getContext('2d');
         const gradient = ctx.createLinearGradient(0, 0, 0, 400);
         gradient.addColorStop(0, 'rgba(54, 162, 235, 0.5)');
@@ -127,10 +130,10 @@
         const performanceChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], // Month labels
                 datasets: [{
-                    label: 'Monthly Growth',
-                    data: [1200, 1500, 1100, 1800, 1300, 1600, 1900, 1400, 1700, 2100, 1600, 1800],
+                    label: 'Business Growth',
+                    data: monthlySales,  // Use the dynamic sales data here
                     backgroundColor: gradient,
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 2,
