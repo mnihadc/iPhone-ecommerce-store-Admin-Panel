@@ -1,8 +1,14 @@
 const jwt = require("jsonwebtoken");
-const getHomePage = (req, res, next) => {
+const User = require("../model/User");
+const Product = require("../model/Product");
+const getHomePage = async (req, res, next) => {
+  const totalUsers = await User.find().countDocuments();
+  const totalProducts = await Product.find().countDocuments();
   res.render("Home", {
     title: "Home page",
     isHomePage: true,
+    totalUsers,
+    totalProducts,
   });
 };
 
