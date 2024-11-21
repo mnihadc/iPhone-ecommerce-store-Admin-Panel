@@ -4,29 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Report</title>
+    <title>{{title}}</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
     <div class="container">
         <header>
-            <h1>Sales Report</h1>
+            <h1>{{title}}</h1>
         </header>
 
         <!-- Sales Summary Section -->
         <section class="sales-summary">
             <div class="summary-item">
                 <h3>Total Sales</h3>
-                <p>₹ 1,500,000</p>
+                <p>₹ {{totalSales}}</p>
             </div>
             <div class="summary-item">
                 <h3>Total Orders</h3>
-                <p>250</p>
+                <p>{{totalOrders}}</p>
             </div>
             <div class="summary-item">
                 <h3>Total Products Sold</h3>
-                <p>500</p>
+                <p>{{totalProductsSold}}</p>
             </div>
         </section>
 
@@ -42,21 +42,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{#each salesByProduct}}
                     <tr>
-                        <td>iPhone 12</td>
-                        <td>150</td>
-                        <td>₹ 900,000</td>
+                        <td>{{productName}}</td>
+                        <td>{{quantitySold}}</td>
+                        <td>₹ {{totalSales}}</td>
                     </tr>
-                    <tr>
-                        <td>iPhone 13</td>
-                        <td>100</td>
-                        <td>₹ 600,000</td>
-                    </tr>
-                    <tr>
-                        <td>MacBook Pro</td>
-                        <td>50</td>
-                        <td>₹ 500,000</td>
-                    </tr>
+                    {{/each}}
                 </tbody>
             </table>
         </section>
@@ -73,21 +65,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{#each salesByDate}}
                     <tr>
-                        <td>2024-11-01</td>
-                        <td>₹ 250,000</td>
-                        <td>30</td>
+                        <td>{{date}}</td>
+                        <td>₹ {{totalSales}}</td>
+                        <td>{{totalOrders}}</td>
                     </tr>
-                    <tr>
-                        <td>2024-11-02</td>
-                        <td>₹ 300,000</td>
-                        <td>40</td>
-                    </tr>
-                    <tr>
-                        <td>2024-11-03</td>
-                        <td>₹ 400,000</td>
-                        <td>50</td>
-                    </tr>
+                    {{/each}}
                 </tbody>
             </table>
         </section>
@@ -104,21 +88,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{#each salesByMonth}}
                     <tr>
-                        <td>November 2024</td>
-                        <td>₹ 1,500,000</td>
-                        <td>250</td>
+                        <td>{{month}}</td>
+                        <td>₹ {{totalSales}}</td>
+                        <td>{{totalOrders}}</td>
                     </tr>
-                    <tr>
-                        <td>October 2024</td>
-                        <td>₹ 1,200,000</td>
-                        <td>200</td>
-                    </tr>
-                    <tr>
-                        <td>September 2024</td>
-                        <td>₹ 1,000,000</td>
-                        <td>150</td>
-                    </tr>
+                    {{/each}}
                 </tbody>
             </table>
         </section>

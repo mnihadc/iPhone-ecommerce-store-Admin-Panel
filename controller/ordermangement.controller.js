@@ -57,4 +57,86 @@ const getOrders = async (req, res, next) => {
   }
 };
 
-module.exports = { getOrders };
+const getSalesResportPage = async (req, res, next) => {
+  try {
+    // Fetch all checkout records
+    const checkouts = await Checkout.find().populate("items.productId");
+
+    // Initialize metrics
+    let totalSales = 0;
+    let totalOrders = 0;
+    let productSalesMap = {}; // To calculate sales by product
+    let dateSalesMap = {}; // To calculate sales by date
+    let monthSalesMap = {}; // To calculate sales by month
+
+    // Process each checkout
+    checkouts.forEach((checkout) => {
+      totalSales += checkout.totalPrice; // Accumulate total sales
+      totalOrders += checkout.items.length; // Increment total orders
+
+      // Process items in the checkout
+      checkout.items.forEach((item) => {
+        // Sales by product
+        if (!productSalesMap[item.productName]) {
+          productSalesMap[item.productName] = {
+            quantitySold: 0,
+            totalSales: 0,
+          };
+        }
+        productSalesMap[item.productName].quantitySold += item.quantity;
+        productSalesMap[item.productName].totalSales += item.itemTotalPrice;
+      });
+
+      // Sales by date
+      const date = checkout.createdAt.toISOString().split("T")[0]; // Extract date
+      if (!dateSalesMap[date]) {
+        dateSalesMap[date] = { totalSales: 0, totalOrders: 0 };
+      }
+      dateSalesMap[date].totalSales += checkout.totalPrice;
+      dateSalesMap[date].totalOrders += checkout.items.length;
+
+      // Sales by month
+      const month = checkout.createdAt.toISOString().substring(0, 7); // Extract year-month
+      if (!monthSalesMap[month]) {
+        monthSalesMap[month] = { totalSales: 0, totalOrders: 0 };
+      }
+      monthSalesMap[month].totalSales += checkout.totalPrice;
+      monthSalesMap[month].totalOrders += checkout.items.length;
+    });
+
+    // Format data for rendering
+    const salesByProduct = Object.entries(productSalesMap).map(
+      ([productName, data]) => ({
+        productName,
+        quantitySold: data.quantitySold,
+        totalSales: data.totalSales,
+      })
+    );
+    const salesByDate = Object.entries(dateSalesMap).map(([date, data]) => ({
+      date,
+      totalSales: data.totalSales,
+      totalOrders: data.totalOrders,
+    }));
+    const salesByMonth = Object.entries(monthSalesMap).map(([month, data]) => ({
+      month,
+      totalSales: data.totalSales,
+      totalOrders: data.totalOrders,
+    }));
+
+    // Render the page
+    res.render("SalesReport", {
+      title: "Sales Report",
+      isSalesReportPage: true,
+      totalSales,
+      totalOrders,
+      totalProductsSold: salesByProduct.length,
+      salesByProduct,
+      salesByDate,
+      salesByMonth,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getOrders, getSalesResportPage };
