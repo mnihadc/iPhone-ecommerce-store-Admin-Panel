@@ -36,59 +36,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Sample Data -->
-                    <tr>
-                        <td>67375562c6cd127bf13aab12</td>
-                        <td>John Doe</td>
-                        <td>john.doe@example.com</td>
-                        <td>SUMMER2024</td>
-                        <td>Standard-Delivery</td>
-                        <td>₹923,966</td>
-                        <td>₹0</td>
-                        <td>2024-11-15</td>
-                        <td>2024-11-22</td>
+                    <!-- Loop through orders data -->
+                    {{#each orders}}
+                    <tr class="{{#if this.highlight}}highlight{{/if}}">
+                        <td>{{this.orderId}}</td>
+                        <td>{{this.username}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{this.offerCode}}</td>
+                        <td>{{this.deliveryMethod}}</td>
+                        <td>{{this.totalPrice}}</td>
+                        <td>{{this.discount}}</td>
+                        <td>{{this.createdAt}}</td>
+                        <td>{{this.deliveryDate}}</td>
                         <td>
-                            <button class="collapse-btn" onclick="toggleProducts('order1')">View Products</button>
-                            <div id="order1" class="product-row">
-                                <table class="products-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Product ID</th>
-                                            <th>Product Name</th>
-                                            <th>Quantity</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1234</td>
-                                            <td>Product A</td>
-                                            <td>2</td>
-                                            <td>34543</td>
-                                        </tr>
-                                        <tr>
-                                            <td>5678</td>
-                                            <td>Product B</td>
-                                            <td>1</td>
-                                            <td>342432</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>67375562c6cd127bf13aad34</td>
-                        <td>Jane Smith</td>
-                        <td>jane.smith@example.com</td>
-                        <td>N/A</td>
-                        <td>Express-Delivery</td>
-                        <td>₹1,20,000</td>
-                        <td>₹10,000</td>
-                        <td>2024-11-16</td>
-                        <td>2024-11-23</td>
-                        <td>
-                            <button class="collapse-btn" onclick="toggleProducts('order2')">View Products</button>
-                            <div id="order2" class="product-row">
+                            <button class="collapse-btn" onclick="toggleProducts('order{{this.orderId}}')">View
+                                Products</button>
+                            <div id="order{{this.orderId}}" class="product-row">
                                 <table class="products-table">
                                     <thead>
                                         <tr>
@@ -99,17 +62,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        {{#each this.products}}
                                         <tr>
-                                            <td>214132513243</td>
-                                            <td>iPhone 15</td>
-                                            <td>2</td>
-                                            <td>76876</td>
+                                            <td>{{this.productId}}</td>
+                                            <td>{{this.productName}}</td>
+                                            <td>{{this.quantity}}</td>
+                                            <td>{{this.price}}</td>
                                         </tr>
+                                        {{/each}}
                                     </tbody>
                                 </table>
                             </div>
                         </td>
                     </tr>
+                    {{/each}}
                 </tbody>
             </table>
         </div>

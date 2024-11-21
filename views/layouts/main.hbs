@@ -10,6 +10,9 @@
     {{#if isHomePage}}
     <link rel="stylesheet" href="/css/home.css">
     {{/if}}
+    {{#if isOrderManagementPage}}
+    <link rel="stylesheet" href="/css/order.css">
+    {{/if}}
     <style>
         /* Fixed sidebar styles */
         #wrapper {
@@ -72,7 +75,8 @@
                 <a href="/product/create-product" class="list-group-item list-group-item-action"
                     id="listItems">Create-Product</a>
                 <a href="#" class="list-group-item list-group-item-action " id="listItems">Sales Reports</a>
-                <a href="#" class="list-group-item list-group-item-action  " id="listItems">Order Management</a>
+                <a href="/order/order-mangements" class="list-group-item list-group-item-action  " id="listItems">Order
+                    Management</a>
                 <a href="#" class="list-group-item list-group-item-action " id="listItems">Inventory</a>
                 <a href="#" class="list-group-item list-group-item-action " id="listItems">Settings</a>
             </div>
