@@ -65,18 +65,15 @@ const getSalesResportPage = async (req, res, next) => {
     // Initialize metrics
     let totalSales = 0;
     let totalOrders = 0;
-    let productSalesMap = {}; // To calculate sales by product
-    let dateSalesMap = {}; // To calculate sales by date
-    let monthSalesMap = {}; // To calculate sales by month
+    let productSalesMap = {};
+    let dateSalesMap = {};
+    let monthSalesMap = {};
 
-    // Process each checkout
     checkouts.forEach((checkout) => {
-      totalSales += checkout.totalPrice; // Accumulate total sales
-      totalOrders += checkout.items.length; // Increment total orders
+      totalSales += checkout.totalPrice;
+      totalOrders += checkout.items.length;
 
-      // Process items in the checkout
       checkout.items.forEach((item) => {
-        // Sales by product
         if (!productSalesMap[item.productName]) {
           productSalesMap[item.productName] = {
             quantitySold: 0,
