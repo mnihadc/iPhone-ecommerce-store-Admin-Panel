@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Order Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Admin Order Management</h1>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search by Order ID, Username, or Email"
+                onkeyup="filterTable()">
+        </div>
+
+        <!-- Order Management Table -->
+        <div class="table-container">
+            <table id="orderTable">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Offer Code</th>
+                        <th>Delivery Method</th>
+                        <th>Total Price</th>
+                        <th>Discount</th>
+                        <th>Created At</th>
+                        <th>Delivery Date</th>
+                        <th>Products</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Data -->
+                    <tr>
+                        <td>67375562c6cd127bf13aab12</td>
+                        <td>John Doe</td>
+                        <td>john.doe@example.com</td>
+                        <td>SUMMER2024</td>
+                        <td>Standard-Delivery</td>
+                        <td>₹923,966</td>
+                        <td>₹0</td>
+                        <td>2024-11-15</td>
+                        <td>2024-11-22</td>
+                        <td>
+                            <button class="collapse-btn" onclick="toggleProducts('order1')">View Products</button>
+                            <div id="order1" class="product-row">
+                                <table class="products-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product ID</th>
+                                            <th>Product Name</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>Product A</td>
+                                            <td>2</td>
+                                            <td>34543</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5678</td>
+                                            <td>Product B</td>
+                                            <td>1</td>
+                                            <td>342432</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>67375562c6cd127bf13aad34</td>
+                        <td>Jane Smith</td>
+                        <td>jane.smith@example.com</td>
+                        <td>N/A</td>
+                        <td>Express-Delivery</td>
+                        <td>₹1,20,000</td>
+                        <td>₹10,000</td>
+                        <td>2024-11-16</td>
+                        <td>2024-11-23</td>
+                        <td>
+                            <button class="collapse-btn" onclick="toggleProducts('order2')">View Products</button>
+                            <div id="order2" class="product-row">
+                                <table class="products-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product ID</th>
+                                            <th>Product Name</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>214132513243</td>
+                                            <td>iPhone 15</td>
+                                            <td>2</td>
+                                            <td>76876</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Search functionality
+        function filterTable() {
+            const input = document.getElementById("searchInput");
+            const filter = input.value.toUpperCase();
+            const table = document.getElementById("orderTable");
+            const tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                let tdArray = tr[i].getElementsByTagName("td");
+                let match = false;
+
+                for (let td of tdArray) {
+                    if (td && td.textContent.toUpperCase().includes(filter)) {
+                        match = true;
+                        break;
+                    }
+                }
+
+                tr[i].style.display = match ? "" : "none";
+            }
+        }
+
+        // Toggle visibility of products
+        function toggleProducts(orderId) {
+            const row = document.getElementById(orderId);
+            if (row.style.display === "none" || row.style.display === "") {
+                row.style.display = "block";
+            } else {
+                row.style.display = "none";
+            }
+        }
+    </script>
+</body>
+
+</html>
