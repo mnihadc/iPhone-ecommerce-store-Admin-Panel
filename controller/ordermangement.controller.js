@@ -8,46 +8,41 @@ const getOrders = async (req, res, next) => {
       .populate("items.productId")
       .sort({ createdAt: -1 });
 
-    // Map orders data to include dynamic product prices
     const ordersData = await Promise.all(
       orders.map(async (order) => {
-        const products = await Promise.all(
-          order.items.map(async (item) => {
-            const product = await Product.findById(item.productId._id);
-            return {
-              productId: item.productId._id,
-              productName: item.productName,
-              quantity: item.quantity,
-              price: `₹${(product.price * item.quantity).toLocaleString()}`,
-            };
-          })
-        );
+        const products = order.items.map((item) => ({
+          productId: item.productId?._id || "Unknown",
+          productName: item.productName,
+          quantity: item.quantity,
+          price: `₹${
+            (item.productId?.price * item.quantity).toLocaleString() || "N/A"
+          }`,
+        }));
 
         const deliveryDate = new Date(order.createdAt);
         deliveryDate.setDate(deliveryDate.getDate() + 7);
 
-        // Calculate if the delivery date is within 7 days from today
         const isHighlighted = new Date() <= deliveryDate;
 
         return {
           orderId: order._id,
-          username: order.userId ? order.userId.username : "Unknown", // Fallback if userId is null
-          email: order.userId ? order.userId.email : "Unknown", // Fallback if userId is null
+          username: order.userId?.username || "Unknown",
+          email: order.userId?.email || "Unknown",
           offerCode: order.offerCode || "N/A",
           deliveryMethod: order.delivery,
           totalPrice: `₹${order.totalPrice.toLocaleString()}`,
           discount: `₹${order.discount.toLocaleString()}`,
+          paymentStatus: order.paymentStatus ? "Paid" : "Pending",
           createdAt: order.createdAt.toLocaleDateString(),
           deliveryDate: deliveryDate.toLocaleDateString(),
-          products: products,
-          highlight: isHighlighted, // Add the highlight flag
+          products,
+          highlight: isHighlighted,
         };
       })
     );
 
-    // Render the Order Management page and pass the order data
     res.render("OrderMangements", {
-      title: "Order Mangement",
+      title: "Order Management",
       isOrderManagementPage: true,
       orders: ordersData,
     });
