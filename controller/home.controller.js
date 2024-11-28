@@ -84,4 +84,7 @@ const getHomePage = async (req, res, next) => {
   }
 };
 
-module.exports = { getHomePage };
+const getSettingsPage = (req, res, next) => {
+  res.render("Settings", { title: "Settings page" });
+};
+module.exports = { getHomePage, getSettingsPage };
