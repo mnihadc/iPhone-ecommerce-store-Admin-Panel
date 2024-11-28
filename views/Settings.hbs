@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Admin Settings - Apple Product Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            background-color: #121212;
+            font-family: 'Arial', sans-serif;
+            color: #f1f1f1;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            color: #f1f1f1;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #007bff;
+        }
+
+        .profile-details {
+            margin-left: 20px;
+        }
+
+        .form-section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f1f1f1;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            background: #2c2c2c;
+            color: #f1f1f1;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            outline: none;
+            background: #3c3c3c;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .edit-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .edit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .banner-section {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .banner-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 3px solid #007bff;
+        }
+
+        .banner-edit-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .save-button:hover {
+            background-color: #0056b3;
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        /* Static Content Section */
+        .static-content {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .static-content h4 {
+            color: #f1f1f1;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .static-content p {
+            font-size: 14px;
+            color: #b3b3b3;
+            text-align: center;
+        }
+
+        .static-content .quote {
+            font-size: 16px;
+            font-style: italic;
+            color: #007bff;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-container">
+        <h2 class="text-center">Admin Settings</h2>
+        <hr>
+
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <img src="{{admin.profileImage}}" alt="Profile Image" class="profile-image">
+            <div class="profile-details">
+                <h5>{{admin.username}}</h5>
+                <p class="text-muted">Role: Super Admin</p>
+                <p class="text-muted">Joined: {{admin.dateJoined}}</p>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Banner Section -->
+        <div class="banner-section">
+            <img src="{{admin.bannerImage}}" alt="Banner Image" class="banner-image">
+            <button class="banner-edit-button" onclick="toggleBannerEdit()">Edit Banner</button>
+            <form id="banner-form" action="/admin/update-banner" method="POST" class="hidden-input">
+                <input type="text" name="bannerUrl" id="bannerUrl" class="form-control"
+                    placeholder="Enter new banner URL">
+                <button type="submit" class="save-button mt-2">Save Banner</button>
+            </form>
+        </div>
+
+        <hr>
+
+        <!-- Admin Form -->
+        <form action="/admin/update-profile" method="POST" enctype="multipart/form-data">
+            <div class="form-section-title">Edit Profile</div>
+
+            <!-- Username -->
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" value="{{admin.username}}"
+                    required>
+                <button type="button" class="edit-button" onclick="toggleEdit('username')">Edit</button>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{admin.email}}" required>
+                <button type="button" class="edit-button" onclick="toggleEdit('email')">Edit</button>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password"
+                    placeholder="Enter new password">
+                <button type="button" class="edit-button" onclick="toggleEdit('password')">Edit</button>
+            </div>
+
+            <!-- Save Button -->
+            <button type="submit" class="save-button">Save Changes</button>
+        </form>
+
+        <!-- Static Content Section -->
+        <div class="static-content">
+            <h4>Our Vision</h4>
+            <p>At AppleStore Admin, we strive to deliver an unparalleled user experience, ensuring that every Apple
+                product is managed and sold with precision and care.</p>
+            <p class="quote">"Innovation is at the heart of everything we do."</p>
+            <p>Our admin panel empowers you to efficiently manage your Apple store, providing insights, customer
+                management, and a seamless journey.</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleEdit(field) {
+            document.getElementById(field).disabled = false;
+            document.getElementById(field).focus();
+        }
+
+        function toggleBannerEdit() {
+            document.getElementById("banner-form").classList.toggle("hidden-input");
+        }
+    </script>
+
+</body>
+
+</html>
