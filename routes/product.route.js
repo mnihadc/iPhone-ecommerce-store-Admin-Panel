@@ -11,10 +11,10 @@ const verifyToken = require("../middleware/verifyToken");
 const router = express.Router();
 
 router.get("/create-product", verifyToken, getCreateProductPage);
-router.post("/add-product", CreateProduct);
+router.post("/add-product", verifyToken, CreateProduct);
 router.get("/get-product", verifyToken, getProductPage);
 router.get("/edit-product/:id", verifyToken, editProductPage);
-router.post("/update-product/:id", updateProduct);
-router.post("/delete-product/:id", deleteProduct);
+router.post("/update-product/:id", verifyToken, updateProduct);
+router.post("/delete-product/:id", verifyToken, deleteProduct);
 
 module.exports = router;

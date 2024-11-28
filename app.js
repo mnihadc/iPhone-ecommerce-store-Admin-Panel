@@ -13,6 +13,7 @@ const homeRouter = require("./routes/home.route");
 const usermangementRouter = require("./routes/usermangement.route");
 const productRouter = require("./routes/product.route");
 const orderRouter = require("./routes/order.route");
+const authRouter = require("./routes/auth.route");
 const app = express();
 dotenv.config();
 
@@ -50,6 +51,7 @@ app.use("/", homeRouter);
 app.use("/user", usermangementRouter);
 app.use("/product", productRouter);
 app.use("/order", orderRouter);
+app.use("/auth", authRouter);
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
