@@ -186,20 +186,22 @@
         <div class="profile-section">
             <!-- Left Side Profile Image and Details -->
             <div style="display: flex; align-items: center; flex: 1;">
-                <img src="{{admin.profileImage}}" alt="Profile Image" class="profile-image">
+                <img src="{{profileImage}}" alt="Profile Image" class="profile-image">
                 <div class="profile-details">
-                    <h5>{{admin.username}}</h5>
-                    <p class="text-muted">Role: Super Admin</p>
-                    <p class="text-muted">Joined: {{admin.dateJoined}}</p>
+                    <h5>{{adminData.username}}</h5>
+                    <p class="text-muted">Role: {{adminData.role}}</p>
+                    <p class="text-muted">Joined: {{adminData.dateJoined}}</p>
                 </div>
             </div>
 
-            <!-- Right Side Button -->
+            <!-- Right Side Button (Visible only to Super Admin) -->
+            {{#if (eq adminData.role "Super Admin")}}
             <div style="display: flex; align-items: center; justify-content: flex-end; flex: 1;">
                 <a href="/auth/get-create-new-admin">
                     <button class="create-admin-btn">Create New Admin</button>
                 </a>
             </div>
+            {{/if}}
         </div>
 
         <hr>
@@ -211,7 +213,7 @@
             <!-- Username -->
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" name="username" value="{{admin.username}}"
+                <input type="text" class="form-control" id="username" name="username" value="{{adminData.username}}"
                     required>
                 <button type="button" class="edit-button" onclick="toggleEdit('username')">Edit</button>
             </div>
@@ -219,7 +221,7 @@
             <!-- Email -->
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="{{admin.email}}" required>
+                <input type="email" class="form-control" id="email" name="email" value="{{adminData.email}}" required>
                 <button type="button" class="edit-button" onclick="toggleEdit('email')">Edit</button>
             </div>
 
@@ -247,7 +249,7 @@
         <hr>
         <!-- Banner Section -->
         <div class="banner-section">
-            <img src="{{admin.bannerImage}}" alt="Banner Image" class="banner-image">
+            <img src="{{bannerImage}}" alt="Banner Image" class="banner-image">
             <button class="banner-edit-button" onclick="toggleBannerEdit()">Edit Banner</button>
             <form id="banner-form" action="/admin/update-banner" method="POST" class="hidden-input">
                 <input type="text" name="bannerUrl" id="bannerUrl" class="form-control"

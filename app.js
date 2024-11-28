@@ -41,6 +41,10 @@ app.engine(
       json: function (context) {
         return JSON.stringify(context);
       },
+      // Define the 'eq' helper for equality comparison
+      eq: function (a, b) {
+        return a === b;
+      },
     },
   })
 );

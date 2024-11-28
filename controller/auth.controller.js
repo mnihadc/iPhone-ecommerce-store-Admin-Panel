@@ -82,10 +82,8 @@ const createNewAdmin = async (req, res, next) => {
       username,
       email,
       password: hashedPassword,
-      role: role || "Admin",
-      profileImage:
-        profileImage ||
-        "https://www.pngmart.com/files/21/Admin-Profile-Vector-PNG-Image.png",
+      role: role,
+      profileImage: profileImage,
     });
     await newAdmin.save();
 

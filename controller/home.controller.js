@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../model/User");
 const Product = require("../model/Product");
 const Checkout = require("../model/Checkout");
+const Admin = require("../model/Admin");
 
 const getHomePage = async (req, res, next) => {
   try {
@@ -84,7 +85,28 @@ const getHomePage = async (req, res, next) => {
   }
 };
 
-const getSettingsPage = (req, res, next) => {
-  res.render("Settings", { title: "Settings page" });
+const getSettingsPage = async (req, res, next) => {
+  try {
+    const adminId = req.user.id;
+    const adminData = await Admin.findOne({ _id: adminId });
+
+    if (!adminData) {
+      return res.status(404).send("Admin not found");
+    }
+
+    // Compute fallback values for profileImage and bannerImage in the route
+    const profileImage = adminData.profileImage || "/path/to/default-image.jpg";
+    const bannerImage = adminData.bannerImage || "/path/to/default-banner.jpg";
+
+    res.render("Settings", {
+      title: "Admin Settings",
+      adminData,
+      profileImage,
+      bannerImage,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
+
 module.exports = { getHomePage, getSettingsPage };
