@@ -17,50 +17,18 @@ const adminSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    password: {
-      type: String,
-      required: true,
-      minlength: 6,
-    },
+    password: { type: String, required: true, minlength: 6 },
     profileImage: {
       type: String,
-      default:
-        "https://www.pngmart.com/files/21/Admin-Profile-Vector-PNG-Image.png",
+      default: "https://example.com/default-profile.png",
     },
-    role: {
-      type: String,
-      enum: ["Super Admin", "Admin"],
-      default: "Admin",
-    },
-    dateJoined: {
-      type: Date,
-      default: Date.now,
-    },
-    lastLogin: {
-      type: Date,
-    },
+    role: { type: String, enum: ["Super Admin", "Admin"], default: "Admin" },
+    dateJoined: { type: Date, default: Date.now },
+    lastLogin: { type: Date },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Password Hashing Middleware
-adminSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+const Admin = mongoose.model("Admin", adminSchema);
 
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Compare Password Method
-adminSchema.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
-};
-
-module.exports = mongoose.model("Admin", adminSchema);
+module.exports = Admin;

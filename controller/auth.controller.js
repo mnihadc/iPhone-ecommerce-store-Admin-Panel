@@ -1,40 +1,48 @@
 const jwt = require("jsonwebtoken");
-const Admin = require("../model/Admin");
 const bcrypt = require("bcryptjs");
+const Admin = require("../model/Admin");
+
+const Login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const emailLowerCase = email.toLowerCase();
+
+    const admin = await Admin.findOne({ email: emailLowerCase });
+
+    if (!admin) {
+      return res.status(400).send("Invalid email");
+    }
+    const isPasswordMatch = await bcrypt.compare(password, admin.password);
+
+    if (!isPasswordMatch) {
+      return res.status(400).send("Invalid password");
+    }
+
+    const token = jwt.sign(
+      { email: admin.email, id: admin._id, role: admin.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 3600000,
+    });
+
+    res.redirect("/");
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
 const getLoginPage = (req, res, next) => {
   res.render("Login", {
     title: "Login page",
     isLoginPage: true,
   });
-};
-const getNewAdminPage = (req, res, next) => {
-  res.render("CreateNewUser", {
-    title: "Create New Admin",
-  });
-};
-const Login = (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    const emailData = process.env.email;
-    const passwordData = process.env.password;
-
-    if (emailData === email && passwordData === password) {
-      const token = jwt.sign({ email: email }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
-      });
-      res.cookie("authToken", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 3600000,
-      });
-      res.redirect("/");
-    } else {
-      return res.send("Invalid email or password");
-    }
-  } catch (error) {
-    next(error);
-  }
 };
 
 const Logout = (req, res, next) => {
@@ -50,7 +58,9 @@ const Logout = (req, res, next) => {
     next(error);
   }
 };
-
+const getNewAdminPage = (req, res, next) => {
+  res.render("CreateNewUser", { title: "Create new admin" });
+};
 const createNewAdmin = async (req, res, next) => {
   try {
     const { username, email, password, role, profileImage } = req.body;
@@ -77,7 +87,6 @@ const createNewAdmin = async (req, res, next) => {
         profileImage ||
         "https://www.pngmart.com/files/21/Admin-Profile-Vector-PNG-Image.png",
     });
-
     await newAdmin.save();
 
     res.redirect("/settings");

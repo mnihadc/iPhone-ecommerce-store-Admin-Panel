@@ -15,11 +15,13 @@ const productRouter = require("./routes/product.route");
 const orderRouter = require("./routes/order.route");
 const authRouter = require("./routes/auth.route");
 const app = express();
+
 dotenv.config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -42,16 +44,24 @@ app.engine(
     },
   })
 );
-app.set("view engine", "hbs");
 
+app.set("view engine", "hbs");
 app.use(express.static(path.join(__dirname, "public")));
 
-const port = process.env.PORT_NO;
+const port = process.env.PORT_NO || 3000;
+
 app.use("/", homeRouter);
 app.use("/user", usermangementRouter);
 app.use("/product", productRouter);
 app.use("/order", orderRouter);
 app.use("/auth", authRouter);
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
