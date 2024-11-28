@@ -6,6 +6,11 @@ const getLoginPage = (req, res, next) => {
     isLoginPage: true,
   });
 };
+const getNewAdminPage = (req, res, next) => {
+  res.render("CreateNewUser", {
+    title: "Create New Admin",
+  });
+};
 const Login = (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -45,4 +50,4 @@ const Logout = (req, res, next) => {
   }
 };
 
-module.exports = { getLoginPage, Login, Logout };
+module.exports = { getLoginPage, Login, Logout, getNewAdminPage };
