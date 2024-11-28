@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
-
+const Admin = require("../model/Admin");
+const bcrypt = require("bcryptjs");
 const getLoginPage = (req, res, next) => {
   res.render("Login", {
     title: "Login page",
@@ -50,4 +51,48 @@ const Logout = (req, res, next) => {
   }
 };
 
-module.exports = { getLoginPage, Login, Logout, getNewAdminPage };
+const createNewAdmin = async (req, res, next) => {
+  try {
+    const { username, email, password, role, profileImage } = req.body;
+
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    const existingAdmin = await Admin.findOne({ email });
+    if (existingAdmin) {
+      return res
+        .status(400)
+        .json({ message: "Admin with this email already exists." });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newAdmin = new Admin({
+      username,
+      email,
+      password: hashedPassword,
+      role: role || "Admin",
+      profileImage:
+        profileImage ||
+        "https://www.pngmart.com/files/21/Admin-Profile-Vector-PNG-Image.png",
+    });
+
+    await newAdmin.save();
+
+    res.redirect("/settings");
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error creating admin. Please try again." });
+  }
+};
+
+module.exports = {
+  getLoginPage,
+  Login,
+  Logout,
+  getNewAdminPage,
+  createNewAdmin,
+};
