@@ -95,13 +95,22 @@ const getSettingsPage = async (req, res, next) => {
       return res.status(404).send("Admin not found");
     }
 
+    // Fetch all admins if the current user is Super Admin
+    let allAdmins = [];
+    if (adminData.role === "Super Admin") {
+      allAdmins = await Admin.find({}); // Fetch all admins from the database
+    }
+
     const profileImage = adminData.profileImage || "/path/to/default-image.jpg";
-    const bannerImage = adminData.bannerImage || "/path/to/default-image";
+    const bannerImage =
+      adminData.firstPageBannerImageURL || "/path/to/default-image";
+
     res.render("Settings", {
       title: "Admin Settings",
       adminData,
       profileImage,
       bannerImage,
+      allAdmins, // Send all admins to the view
     });
   } catch (error) {
     next(error);

@@ -195,6 +195,63 @@
         .create-admin-btn:hover {
             background-color: #218838;
         }
+
+        .admin-table {
+            width: 100%;
+            overflow-x: auto;
+            max-height: 300px;
+            display: block;
+            margin-top: 30px;
+        }
+
+        .admin-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+
+        .admin-table img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .delete-button {
+            background-color: slategray;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+
+        }
+
+        .delete-button:hover {
+            background-color: red;
+        }
+
+        .main-button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .main-button:hover {
+            background-color: green;
+        }
     </style>
 </head>
 
@@ -277,7 +334,50 @@
                 management, and a seamless journey.</p>
         </div>
         <hr>
-      
+        {{#if (eq adminData.role "Super Admin")}}
+        <h3 class="text-center">All Admins</h3>
+        <div class="admin-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Profile Image</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Banner Image</th>
+                        <th>Joined</th>
+                        <th>Last Login</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each allAdmins}}
+                    <tr>
+                        <td><img src="{{this.profileImage}}" alt="Profile Image"></td>
+                        <td>{{this.username}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{this.role}}</td>
+                        <td>
+                            {{#if this.firstPageBannerImageURL}}
+                            <img src="{{this.firstPageBannerImageURL}}" alt="Banner Image" style="width: 100px;">
+                            {{else}}
+                            No Banner
+                            {{/if}}
+                        </td>
+                        <td>{{this.dateJoined}}</td>
+                        <td>{{this.lastLogin}}</td>
+                        <td>
+                            <button class="delete-button" onclick="deleteAdmin('{{this._id}}')">Delete</button>
+                            <button class="main-button" onclick="setMain('{{this._id}}')">
+                                {{#if this.mainStatus}} Unset Main {{else}} Set Main {{/if}}
+                            </button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{/if}}
 
         <hr>
     </div>
