@@ -18,6 +18,8 @@ const Login = async (req, res, next) => {
     if (!isPasswordMatch) {
       return res.status(400).send("Invalid password");
     }
+    admin.lastLogin = new Date();
+    await admin.save();
 
     const token = jwt.sign(
       { email: admin.email, id: admin._id, role: admin.role },
@@ -85,6 +87,7 @@ const createNewAdmin = async (req, res, next) => {
       role: role,
       profileImage: profileImage,
     });
+
     await newAdmin.save();
 
     res.redirect("/settings");

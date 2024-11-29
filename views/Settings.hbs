@@ -208,11 +208,15 @@
         <div class="profile-section">
             <!-- Left Side Profile Image and Details -->
             <div style="display: flex; align-items: center; flex: 1;">
-                <img src="{{profileImage}}" alt="Profile Image" class="profile-image">
-                <div class="profile-details">
+                <img src="{{profileImage}}" alt="Profile Image" class="profile-image" style="margin-left: 3rem;">
+                <div class="profile-details" style="margin-left: 3rem;">
                     <h5>{{adminData.username}}</h5>
                     <p class="text-muted">Role: {{adminData.role}}</p>
                     <p class="text-muted">Joined: {{adminData.dateJoined}}</p>
+                    <p class="text-muted">
+                        Last Login:
+                        {{adminData.lastLogin}}
+                    </p>
                 </div>
             </div>
 
