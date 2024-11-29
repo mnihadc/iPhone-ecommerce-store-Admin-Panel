@@ -17,14 +17,35 @@ const adminSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    password: { type: String, required: true, minlength: 6 },
+    password: {
+      type: String,
+      required: true,
+      minlength: 6,
+    },
     profileImage: {
       type: String,
       default: "https://example.com/default-profile.png",
     },
-    role: { type: String, enum: ["Super Admin", "Admin"], default: "Admin" },
-    dateJoined: { type: Date, default: Date.now },
-    lastLogin: { type: Date },
+    role: {
+      type: String,
+      enum: ["Super Admin", "Admin"],
+      default: "Admin",
+    },
+    dateJoined: {
+      type: Date,
+      default: Date.now,
+    },
+    lastLogin: {
+      type: Date,
+    },
+    firstPageBannerImageURL: {
+      type: String,
+      default: null,
+    },
+    mainStatus: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

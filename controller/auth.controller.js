@@ -65,7 +65,21 @@ const getNewAdminPage = (req, res, next) => {
 };
 const createNewAdmin = async (req, res, next) => {
   try {
-    const { username, email, password, role, profileImage } = req.body;
+    const {
+      username,
+      email,
+      password,
+      role,
+      profileImage,
+      firstPageBannerImageURL,
+    } = req.body;
+    const currentUser = req.user;
+
+    if (firstPageBannerImageURL && currentUser.role !== "Super Admin") {
+      return res
+        .status(403)
+        .json({ message: "Only Super Admin can set a banner image." });
+    }
 
     if (!username || !email || !password) {
       return res.status(400).json({ message: "All fields are required." });
@@ -86,6 +100,7 @@ const createNewAdmin = async (req, res, next) => {
       password: hashedPassword,
       role: role,
       profileImage: profileImage,
+      firstPageBannerImageURL: firstPageBannerImageURL || null,
     });
 
     await newAdmin.save();

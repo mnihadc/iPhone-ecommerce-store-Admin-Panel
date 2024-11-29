@@ -96,8 +96,7 @@ const getSettingsPage = async (req, res, next) => {
     }
 
     const profileImage = adminData.profileImage || "/path/to/default-image.jpg";
-    const bannerImage = adminData.bannerImage || "/path/to/default-banner.jpg";
-
+    const bannerImage = adminData.bannerImage || "/path/to/default-image";
     res.render("Settings", {
       title: "Admin Settings",
       adminData,
