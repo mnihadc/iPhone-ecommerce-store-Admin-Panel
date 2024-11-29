@@ -7,6 +7,7 @@ const {
   getNewAdminPage,
   createNewAdmin,
   deleteAdmin,
+  mainAdmin,
 } = require("../controller/auth.controller");
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.get("/logout", verifyToken, Logout);
 router.get("/get-create-new-admin", verifyToken, getNewAdminPage);
 router.post("/create-new-admin", createNewAdmin);
 router.delete("/delete-admin/:adminId", verifyToken, deleteAdmin);
+router.patch("/set-admin-main", verifyToken, mainAdmin);
 
 module.exports = router;

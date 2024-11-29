@@ -146,12 +146,48 @@ const deleteAdmin = async (req, res, next) => {
     next(error);
   }
 };
+const mainAdmin = async (req, res, next) => {
+  try {
+    const { adminId } = req.body;
+
+    // Validate adminId
+    if (!adminId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Admin ID is required." });
+    }
+
+    // Update all admins: set mainStatus false for all, then true for the selected admin
+    await Admin.updateMany({}, { $set: { mainStatus: false } });
+
+    const updatedAdmin = await Admin.findByIdAndUpdate(
+      adminId,
+      { mainStatus: true },
+      { new: true }
+    );
+
+    if (!updatedAdmin) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Admin not found." });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Main admin updated successfully.",
+      data: updatedAdmin,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   getLoginPage,
   Login,
   Logout,
   deleteAdmin,
+  mainAdmin,
   getNewAdminPage,
   createNewAdmin,
 };
