@@ -116,7 +116,7 @@ const createNewAdmin = async (req, res, next) => {
 
 const deleteAdmin = async (req, res, next) => {
   try {
-    const adminId = req.params.id;
+    const adminId = req.params.adminId;
     const currentUser = req.user;
 
     if (currentUser.role !== "Super Admin") {

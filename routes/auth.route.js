@@ -15,6 +15,6 @@ router.post("/login", Login);
 router.get("/logout", verifyToken, Logout);
 router.get("/get-create-new-admin", verifyToken, getNewAdminPage);
 router.post("/create-new-admin", createNewAdmin);
-router.delete("/delete-admin/:id", verifyToken, deleteAdmin);
+router.delete("/delete-admin/:adminId", verifyToken, deleteAdmin);
 
 module.exports = router;
