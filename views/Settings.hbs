@@ -468,6 +468,34 @@
         }
 
     </script>
+    <script>
+        function setMain(adminId) {
+            if (confirm("Are you sure you want to set this admin as the main admin?")) {
+                fetch("/auth/set-admin-main", {
+                    method: "PATCH",
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ adminId }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            alert("Main admin updated successfully.");
+                            location.reload(); // Refresh the page to reflect the changes
+                        } else {
+                            alert(data.message || "Failed to set main admin.");
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("An error occurred.");
+                    });
+            }
+        }
+
+    </script>
 </body>
 
 </html>

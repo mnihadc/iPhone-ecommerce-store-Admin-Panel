@@ -75,12 +75,6 @@ const createNewAdmin = async (req, res, next) => {
     } = req.body;
     const currentUser = req.user;
 
-    if (firstPageBannerImageURL && currentUser.role !== "Super Admin") {
-      return res
-        .status(403)
-        .json({ message: "Only Super Admin can set a banner image." });
-    }
-
     if (!username || !email || !password) {
       return res.status(400).json({ message: "All fields are required." });
     }
@@ -146,18 +140,16 @@ const deleteAdmin = async (req, res, next) => {
     next(error);
   }
 };
+
 const mainAdmin = async (req, res, next) => {
   try {
     const { adminId } = req.body;
 
-    // Validate adminId
     if (!adminId) {
       return res
         .status(400)
         .json({ success: false, message: "Admin ID is required." });
     }
-
-    // Update all admins: set mainStatus false for all, then true for the selected admin
     await Admin.updateMany({}, { $set: { mainStatus: false } });
 
     const updatedAdmin = await Admin.findByIdAndUpdate(
