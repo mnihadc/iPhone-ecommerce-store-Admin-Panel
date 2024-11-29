@@ -14,6 +14,24 @@
             color: #f1f1f1;
         }
 
+        .alert {
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .alert-success {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .alert-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
         .main-container {
             max-width: 1000px;
             margin: 30px auto;
@@ -207,7 +225,7 @@
         <hr>
 
         <!-- Admin Form -->
-        <form action="/admin/update-profile" method="POST" enctype="multipart/form-data">
+        <form action="/update-profile" method="PUT" id="updateProfileForm">
             <div class="form-section-title">Edit Profile</div>
 
             <!-- Username -->
@@ -236,6 +254,7 @@
             <!-- Save Button -->
             <button type="submit" class="save-button">Save Changes</button>
         </form>
+
 
         <!-- Static Content Section -->
         <div class="static-content">
@@ -271,7 +290,55 @@
             document.getElementById("banner-form").classList.toggle("hidden-input");
         }
     </script>
+    <script>
+        document.getElementById("updateProfileForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
 
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch("/update-profile", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        username: formData.get("username"),
+                        email: formData.get("email"),
+                        password: formData.get("password"),
+                    }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    displayMessage("Profile updated successfully.", "success");
+                    setTimeout(() => {
+                        window.location.href = "/settings"; // Redirect after success
+                    }, 1000);
+                } else {
+                    displayMessage(result.message || "Failed to update profile.", "error");
+                }
+            } catch (error) {
+                displayMessage("An unexpected error occurred.", "error");
+            }
+        });
+
+        function displayMessage(message, type) {
+            const messageContainer = document.createElement("div");
+            messageContainer.className = `alert alert-${type === "success" ? "success" : "danger"}`;
+            messageContainer.textContent = message;
+
+
+            document.querySelector(".main-container").prepend(messageContainer);
+
+
+            setTimeout(() => {
+                messageContainer.remove();
+            }, 3000);
+        }
+
+    </script>
 </body>
 
 </html>

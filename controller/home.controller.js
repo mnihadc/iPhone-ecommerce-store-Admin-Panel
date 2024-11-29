@@ -3,6 +3,7 @@ const User = require("../model/User");
 const Product = require("../model/Product");
 const Checkout = require("../model/Checkout");
 const Admin = require("../model/Admin");
+const bcrypt = require("bcryptjs");
 
 const getHomePage = async (req, res, next) => {
   try {
@@ -94,7 +95,6 @@ const getSettingsPage = async (req, res, next) => {
       return res.status(404).send("Admin not found");
     }
 
-    // Compute fallback values for profileImage and bannerImage in the route
     const profileImage = adminData.profileImage || "/path/to/default-image.jpg";
     const bannerImage = adminData.bannerImage || "/path/to/default-banner.jpg";
 
@@ -109,4 +109,29 @@ const getSettingsPage = async (req, res, next) => {
   }
 };
 
-module.exports = { getHomePage, getSettingsPage };
+const updateProfile = async (req, res, next) => {
+  try {
+    const { username, email, password } = req.body;
+    const adminId = req.user.id;
+
+    const updates = {
+      username: username,
+      email: email,
+    };
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      updates.password = await bcrypt.hash(password, salt);
+    }
+
+    await Admin.findByIdAndUpdate(adminId, updates, { new: true });
+
+    res.status(200).json({ message: "Profile updated successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to update profile", error: error.message });
+  }
+};
+
+module.exports = { getHomePage, getSettingsPage, updateProfile };
