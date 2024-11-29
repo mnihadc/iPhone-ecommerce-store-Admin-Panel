@@ -95,10 +95,9 @@ const getSettingsPage = async (req, res, next) => {
       return res.status(404).send("Admin not found");
     }
 
-    // Fetch all admins if the current user is Super Admin
     let allAdmins = [];
     if (adminData.role === "Super Admin") {
-      allAdmins = await Admin.find({}); // Fetch all admins from the database
+      allAdmins = await Admin.find({});
     }
 
     const profileImage = adminData.profileImage || "/path/to/default-image.jpg";
@@ -110,7 +109,7 @@ const getSettingsPage = async (req, res, next) => {
       adminData,
       profileImage,
       bannerImage,
-      allAdmins, // Send all admins to the view
+      allAdmins,
     });
   } catch (error) {
     next(error);

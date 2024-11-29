@@ -114,10 +114,44 @@ const createNewAdmin = async (req, res, next) => {
   }
 };
 
+const deleteAdmin = async (req, res, next) => {
+  try {
+    const adminId = req.params.id;
+    const currentUser = req.user;
+
+    if (currentUser.role !== "Super Admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only Super Admins can delete admins.",
+      });
+    }
+
+    if (currentUser._id === adminId) {
+      return res.status(400).json({
+        success: false,
+        message: "You cannot delete your own account.",
+      });
+    }
+
+    const deletedAdmin = await Admin.findByIdAndDelete(adminId);
+
+    if (!deletedAdmin) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Admin not found." });
+    }
+
+    res.json({ success: true, message: "Admin deleted successfully." });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getLoginPage,
   Login,
   Logout,
+  deleteAdmin,
   getNewAdminPage,
   createNewAdmin,
 };
