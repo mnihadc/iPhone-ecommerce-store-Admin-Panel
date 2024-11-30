@@ -58,4 +58,22 @@ const getAddressManagementPage = async (req, res, next) => {
   }
 };
 
-module.exports = { getUserMangementPage, deleteUser, getAddressManagementPage };
+const deleteAddress = async (req, res, next) => {
+  try {
+    const addressId = req.params.id;
+    const result = await Address.findByIdAndDelete(addressId);
+    if (result) {
+      res.status(200).json({ message: "Address deleted successfully" });
+    } else {
+      res.status(404).json({ message: "Address not found" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+module.exports = {
+  getUserMangementPage,
+  deleteUser,
+  getAddressManagementPage,
+  deleteAddress,
+};
