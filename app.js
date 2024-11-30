@@ -52,7 +52,7 @@ app.engine(
 app.set("view engine", "hbs");
 app.use(express.static(path.join(__dirname, "public")));
 
-const port = process.env.PORT_NO || 3000;
+const port = process.env.PORT_NO || 3001;
 
 app.use("/", homeRouter);
 app.use("/user", usermangementRouter);
