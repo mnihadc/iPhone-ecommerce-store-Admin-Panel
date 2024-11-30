@@ -30,18 +30,32 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-const getAddressMangementPage = async (req, res, next) => {
+const getAddressManagementPage = async (req, res, next) => {
   try {
-    const userAddress = await Address.find({});
-    res.render("AddressManagement", {
-      title: "Address Management",
-      isAddressManagementPage: true,
-      userAddress,
+    const addresses = await Address.find().lean();
+
+    // Format the created date in each address
+    addresses.forEach((address) => {
+      address.formattedCreatedAt = new Date(
+        address.createdAt
+      ).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+    });
+
+    res.render("Address-Mangement", {
+      title: "Address Mangement",
+      addresses: addresses,
     });
   } catch (error) {
-    console.error("Error fetching users:", error);
+    console.error("Error fetching addresses:", error);
     res.status(500).send("An error occurred");
   }
 };
 
-module.exports = { getUserMangementPage, deleteUser, getAddressMangementPage };
+module.exports = { getUserMangementPage, deleteUser, getAddressManagementPage };
