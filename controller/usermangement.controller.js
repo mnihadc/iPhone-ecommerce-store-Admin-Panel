@@ -1,3 +1,4 @@
+const Address = require("../model/Address");
 const User = require("../model/User");
 
 const getUserMangementPage = async (req, res) => {
@@ -29,4 +30,18 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-module.exports = { getUserMangementPage, deleteUser };
+const getAddressMangementPage = async (req, res, next) => {
+  try {
+    const userAddress = await Address.find({});
+    res.render("AddressManagement", {
+      title: "Address Management",
+      isAddressManagementPage: true,
+      userAddress,
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).send("An error occurred");
+  }
+};
+
+module.exports = { getUserMangementPage, deleteUser, getAddressMangementPage };
