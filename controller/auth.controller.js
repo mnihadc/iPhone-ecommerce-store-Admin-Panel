@@ -11,12 +11,12 @@ const Login = async (req, res, next) => {
     const admin = await Admin.findOne({ email: emailLowerCase });
 
     if (!admin) {
-      return res.status(400).send("Invalid email");
+      return res.status(400).json({ error: "Invalid email" });
     }
     const isPasswordMatch = await bcrypt.compare(password, admin.password);
 
     if (!isPasswordMatch) {
-      return res.status(400).send("Invalid password");
+      return res.status(400).json({ error: "Invalid password" });
     }
     admin.lastLogin = new Date();
     await admin.save();

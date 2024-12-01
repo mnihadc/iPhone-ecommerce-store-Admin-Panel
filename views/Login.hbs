@@ -153,16 +153,17 @@
             <div class="shape"></div>
             <div class="shape"></div>
         </div>
+
+
         <form class="formLogin" action="/auth/login" method="post">
             <h3>IStore</h3>
             <h4 style="text-align: center;margin-top: 1px;"> Admin Panel Login</h4>
-
             <label for="email">Email</label>
             <input type="email" placeholder="Email" id="email" name="email">
 
             <label for="password">Password</label>
             <input type="password" placeholder="Password" id="password" name="password">
-
+            <div id="error-message" style="color: red; text-align: center; display: none;margin-top:1rem ;"></div>
             <button class="btnLog">Log In</button>
             <div class="social">
 
@@ -170,5 +171,34 @@
         </form>
     </div>
 </body>
+<script>
+    const form = document.querySelector(".formLogin");
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const errorMessageDiv = document.getElementById("error-message");
+
+        // Make a POST request with email and password
+        const response = await fetch("/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.status === 400 && data.error) {
+            errorMessageDiv.textContent = data.error; // Display the error message
+            errorMessageDiv.style.display = "block"; // Show the error message
+        } else if (response.ok) {
+            // Redirect to the dashboard or another page on success
+            window.location.href = "/";
+        }
+    });
+</script>
 
 </html>
