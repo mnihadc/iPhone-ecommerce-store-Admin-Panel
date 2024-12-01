@@ -153,4 +153,25 @@ const CreateCoupons = async (req, res, next) => {
   }
 };
 
-module.exports = { getOrders, getSalesResportPage, CreateCoupons };
+const DeleteCoupons = async (req, res, next) => {
+  try {
+    const { code } = req.params;
+
+    const deletedCoupon = await Coupon.findOneAndDelete({ code });
+
+    if (!deletedCoupon) {
+      return res.status(404).json({ message: "Coupon code not found." });
+    }
+
+    res.status(200).json({ message: "Coupon deleted successfully." });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  getOrders,
+  getSalesResportPage,
+  CreateCoupons,
+  DeleteCoupons,
+};
