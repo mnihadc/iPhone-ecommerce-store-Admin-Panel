@@ -540,6 +540,36 @@
         }
 
     </script>
+    <script>
+        document.getElementById("createCouponForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const code = document.getElementById("couponCode").value;
+            const validUntil = document.getElementById("validUntil").value;
+
+            try {
+                const response = await fetch("/order/create-coupon", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ code, validUntil })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert("Coupon created successfully.");
+                    location.reload();
+                } else {
+                    alert(result.message || "Failed to create coupon.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An unexpected error occurred.");
+            }
+        });
+    </script>
 </body>
 
 </html>

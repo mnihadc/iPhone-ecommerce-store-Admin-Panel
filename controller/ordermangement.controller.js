@@ -1,4 +1,5 @@
 const Checkout = require("../model/Checkout");
+const Coupon = require("../model/Coupons");
 const Product = require("../model/Product");
 
 const getOrders = async (req, res, next) => {
@@ -131,4 +132,25 @@ const getSalesResportPage = async (req, res, next) => {
   }
 };
 
-module.exports = { getOrders, getSalesResportPage };
+const CreateCoupons = async (req, res, next) => {
+  try {
+    const { code, validUntil } = req.body;
+    const existingCoupon = await Coupon.findOne({ code });
+    if (existingCoupon) {
+      return res.status(400).json({ message: "Coupon code already exists." });
+    }
+
+    const coupon = new Coupon({
+      code,
+      validUntil: new Date(validUntil),
+    });
+
+    await coupon.save();
+
+    res.status(201).json({ message: "Coupon created successfully." });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getOrders, getSalesResportPage, CreateCoupons };
