@@ -121,7 +121,7 @@ const getSettingsPage = async (req, res, next) => {
 
 const updateProfile = async (req, res, next) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, bannerImage } = req.body;
     const adminId = req.user.id;
 
     const updates = {
@@ -129,11 +129,23 @@ const updateProfile = async (req, res, next) => {
       email: email,
     };
 
+    // Validate banner image URL
+    if (bannerImage && !isValidURL(bannerImage)) {
+      return res.status(400).json({ message: "Invalid banner image URL." });
+    }
+
+    // Update banner image if provided
+    if (bannerImage) {
+      updates.firstPageBannerImageURL = bannerImage;
+    }
+
+    // Hash password if provided
     if (password) {
       const salt = await bcrypt.genSalt(10);
       updates.password = await bcrypt.hash(password, salt);
     }
 
+    // Update admin profile in the database
     await Admin.findByIdAndUpdate(adminId, updates, { new: true });
 
     res.status(200).json({ message: "Profile updated successfully" });
@@ -142,6 +154,12 @@ const updateProfile = async (req, res, next) => {
       .status(500)
       .json({ message: "Failed to update profile", error: error.message });
   }
+};
+
+// Helper function to validate the URL format
+const isValidURL = (url) => {
+  const regex = /^(ftp|http|https):\/\/[^ "]+$/;
+  return regex.test(url);
 };
 
 module.exports = { getHomePage, getSettingsPage, updateProfile };

@@ -316,6 +316,21 @@
                     placeholder="Enter new password">
                 <button type="button" class="edit-button" onclick="toggleEdit('password')">Edit</button>
             </div>
+            <div style="display: flex;margin-left: 4rem;">
+                {{#if adminData.firstPageBannerImageURL}}
+                <img src="{{adminData.firstPageBannerImageURL}}" alt="Banner Image" class="banner-image"
+                    style="width: 130px;height: 100px;">
+                {{else}}
+                <p>No banner image set.</p>
+                {{/if}}
+                <div class="">
+                    <label for="bannerImage" style="margin-left: 2rem;">Banner Image URL: </label>
+                    <input type="text" class="form-control" id="bannerImage" name="bannerImage"
+                        value="{{adminData.bannerImage}}">
+                    <button type="button" style="margin-top: 1rem;" class="edit-button"
+                        onclick="toggleEdit('bannerImage')">Edit</button>
+                </div>
+            </div>
 
             <!-- Save Button -->
             <div class="form-group" style="justify-content: flex-end; padding-top: 20px;">
@@ -458,6 +473,7 @@
                         username: formData.get("username"),
                         email: formData.get("email"),
                         password: formData.get("password"),
+                        bannerImage: formData.get("bannerImage"),
                     }),
                 });
 
