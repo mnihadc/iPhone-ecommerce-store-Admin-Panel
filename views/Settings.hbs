@@ -403,6 +403,7 @@
                         <th>Coupon Code</th>
                         <th>Created At</th>
                         <th>Expires At</th>
+                        <th>Discount (%)</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -413,6 +414,7 @@
                         <td>{{this.code}}</td>
                         <td>{{this.createdAt}}</td>
                         <td>{{this.validUntil}}</td>
+                        <td>{{this.discountPercentage}}%</td>
                         <td>
                             <button class="delete-button" onclick="deleteCoupon('{{this._id}}')">Delete</button>
                         </td>
@@ -422,8 +424,8 @@
                     <p>No coupons available.</p>
                     {{/if}}
                 </tbody>
-
             </table>
+
         </div>
 
         <hr>
@@ -439,7 +441,11 @@
                 <label for="validUntil">Valid Until: </label>
                 <input type="date" id="validUntil" name="validUntil" class="form-control" required>
             </div>
-
+            <div class="form-group">
+                <label for="discountPercentage">Discount Percentage:</label>
+                <input type="number" id="discountPercentage" name="discountPercentage" class="form-control" min="1"
+                    max="100" placeholder="Enter discount percentage" required>
+            </div>
             <div class="form-group text-center">
                 <button type="submit" class="save-button">Create Coupon</button>
             </div>
@@ -568,6 +574,13 @@
 
             const code = document.getElementById("couponCode").value;
             const validUntil = document.getElementById("validUntil").value;
+            const discountPercentage = document.getElementById("discountPercentage").value;
+
+            // Client-side validation
+            if (discountPercentage < 1 || discountPercentage > 100 || isNaN(discountPercentage)) {
+                alert("Discount percentage must be a number between 1 and 100.");
+                return;
+            }
 
             try {
                 const response = await fetch("/order/create-coupon", {
@@ -575,7 +588,7 @@
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ code, validUntil })
+                    body: JSON.stringify({ code, validUntil, discountPercentage })
                 });
 
                 const result = await response.json();
@@ -591,6 +604,7 @@
                 alert("An unexpected error occurred.");
             }
         });
+
         function deleteCoupon(couponId) {
             if (confirm("Are you sure you want to delete this coupon?")) {
                 fetch(`/order/delete-coupon/${couponId}`, {

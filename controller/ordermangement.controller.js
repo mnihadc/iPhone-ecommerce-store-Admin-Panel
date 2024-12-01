@@ -134,21 +134,40 @@ const getSalesResportPage = async (req, res, next) => {
 
 const CreateCoupons = async (req, res, next) => {
   try {
-    const { code, validUntil } = req.body;
+    const { code, validUntil, discountPercentage } = req.body;
+    console.log(discountPercentage);
+
+    // Check if all fields are provided
+    if (!code || !validUntil || !discountPercentage) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    // Validate discountPercentage is a number between 1 and 100
+    const discount = parseFloat(discountPercentage);
+    if (isNaN(discount) || discount < 1 || discount > 100) {
+      return res.status(400).json({
+        message: "Discount percentage must be a number between 1 and 100.",
+      });
+    }
+
+    // Check if coupon code already exists
     const existingCoupon = await Coupon.findOne({ code });
     if (existingCoupon) {
       return res.status(400).json({ message: "Coupon code already exists." });
     }
 
+    // Create new coupon
     const coupon = new Coupon({
-      code,
+      code: code.trim(),
       validUntil: new Date(validUntil),
+      discountPercentage: discount,
     });
 
     await coupon.save();
 
     res.status(201).json({ message: "Coupon created successfully." });
   } catch (error) {
+    console.error("Error creating coupon:", error);
     next(error);
   }
 };
