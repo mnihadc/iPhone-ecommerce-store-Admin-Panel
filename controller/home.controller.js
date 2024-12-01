@@ -81,7 +81,6 @@ const getHomePage = async (req, res, next) => {
       totalProducts,
       totalOrders,
       monthlySales,
-      coupons,
       salesGrowth: growth.toFixed(2),
     });
   } catch (error) {

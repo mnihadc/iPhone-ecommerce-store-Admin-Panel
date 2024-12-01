@@ -155,15 +155,15 @@ const CreateCoupons = async (req, res, next) => {
 
 const DeleteCoupons = async (req, res, next) => {
   try {
-    const { code } = req.params;
+    const { id } = req.params;
 
-    const deletedCoupon = await Coupon.findOneAndDelete({ code });
+    const deletedCoupon = await Coupon.findOneAndDelete({ _id: id });
 
     if (!deletedCoupon) {
       return res.status(404).json({ message: "Coupon code not found." });
     }
 
-    res.status(200).json({ message: "Coupon deleted successfully." });
+    res.status(200).json({ success: true });
   } catch (error) {
     next(error);
   }
