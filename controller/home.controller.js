@@ -4,6 +4,7 @@ const Product = require("../model/Product");
 const Checkout = require("../model/Checkout");
 const Admin = require("../model/Admin");
 const bcrypt = require("bcryptjs");
+const Coupon = require("../model/Coupons");
 
 const getHomePage = async (req, res, next) => {
   try {
@@ -72,6 +73,7 @@ const getHomePage = async (req, res, next) => {
     salesData.forEach((item) => {
       monthlySales[item._id - 1] = item.totalSales;
     });
+
     res.render("Home", {
       title: "Home page",
       isHomePage: true,
@@ -79,6 +81,7 @@ const getHomePage = async (req, res, next) => {
       totalProducts,
       totalOrders,
       monthlySales,
+      coupons,
       salesGrowth: growth.toFixed(2),
     });
   } catch (error) {
@@ -103,13 +106,14 @@ const getSettingsPage = async (req, res, next) => {
     const profileImage = adminData.profileImage || "/path/to/default-image.jpg";
     const bannerImage =
       adminData.firstPageBannerImageURL || "/path/to/default-image";
-
+    const coupons = await Coupon.find({});
     res.render("Settings", {
       title: "Admin Settings",
       adminData,
       profileImage,
       bannerImage,
       allAdmins,
+      coupons,
     });
   } catch (error) {
     next(error);
