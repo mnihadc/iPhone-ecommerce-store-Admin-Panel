@@ -15,7 +15,7 @@ router.get("/get-login", getLoginPage);
 router.post("/login", Login);
 router.get("/logout", verifyToken, Logout);
 router.get("/get-create-new-admin", verifyToken, getNewAdminPage);
-router.post("/create-new-admin", createNewAdmin);
+router.post("/create-new-admin", verifyToken, createNewAdmin);
 router.delete("/delete-admin/:adminId", verifyToken, deleteAdmin);
 router.patch("/set-admin-main", verifyToken, mainAdmin);
 

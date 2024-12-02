@@ -54,9 +54,65 @@
             justify-content: center;
             height: 100%;
             width: 100%;
-            border-radius: 1.5rem;
-            background: #633b3b;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            background: linear-gradient(145deg, #2c2c38, #1f1f2e);
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2), -10px -10px 20px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Counter Animation */
+        .count {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        /* Tooltip for icons */
+        [data-toggle="tooltip"] {
+            cursor: pointer;
+        }
+
+        .motivation-section {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, #1f1f2e, #2c2c38);
+            border-radius: 20px;
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2), -10px -10px 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .motivation-section h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .motivation-section p {
+            font-size: 20px;
+            font-style: italic;
+            color: #d1d1d1;
+        }
+
+        .signature-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .signature-section h4 {
+            font-weight: bold;
+            margin-top: 3rem;
+            margin-left: 3rem;
+        }
+
+        .signature {
+            font-family: 'Cursive', serif;
+            font-size: 24px;
+            color: #ffffff;
+        }
+
+        .container-fluid {
+            padding: 20px;
+            margin-top: 1rem;
+            background: #312d2d;
         }
     </style>
 </head>
@@ -117,31 +173,70 @@
             </div>
         </div>
     </div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Left and Right side contents (Cards and Chart) remain unchanged -->
+
+            <!-- Motivational Section -->
+            <div class="motivation-section">
+                <h2>🌟 A Thought to Inspire 🌟</h2>
+                <p>"Success is not final, failure is not fatal: It is the courage to continue that counts."</p>
+                <p>– Winston Churchill</p>
+            </div>
+
+            <!-- Signature Section -->
+            <div class="signature-section">
+                <h4>With Vision & Leadership,</h4>
+                <div class="signature">Muhammed Nihad C</div>
+                <small>Founder & CEO</small>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Fetch the dynamic data passed from the backend (monthlySales array)
-        const monthlySales = {{ json monthlySales }};  // {{json}} is used to stringify the array
+        // Animate Counters
+        function animateCounter(id, start, end, duration) {
+            let obj = document.getElementById(id);
+            let current = start;
+            let increment = end > start ? 1 : -1;
+            let step = Math.abs(Math.floor(duration / (end - start)));
+            let timer = setInterval(function () {
+                current += increment;
+                obj.innerHTML = current;
+                if (current == end) {
+                    clearInterval(timer);
+                }
+            }, step);
+        }
 
+        document.addEventListener('DOMContentLoaded', function () {
+            animateCounter('totalProductsCount', 0, {{ totalProducts }}, 2000);
+        animateCounter('totalUsersCount', 0, {{ totalUsers }}, 2000);
+        animateCounter('salesGrowthCount', 0, {{ salesGrowth }}, 2000);
+        animateCounter('totalOrdersCount', 0, {{ totalOrders }}, 2000);
+        });
+
+        // Sales Performance Chart
+        const monthlySales = {{ json monthlySales }};
         const ctx = document.getElementById('performanceChart').getContext('2d');
         const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, 'rgba(54, 162, 235, 0.5)');
-        gradient.addColorStop(1, 'rgba(54, 162, 235, 0)');
+        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.7)');
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
 
-        const performanceChart = new Chart(ctx, {
+        new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], // Month labels
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 datasets: [{
                     label: 'Business Growth',
-                    data: monthlySales,  // Use the dynamic sales data here
+                    data: monthlySales,
                     backgroundColor: gradient,
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderColor: '#6366F1',
                     borderWidth: 2,
                     fill: true,
-                    pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                    pointBackgroundColor: '#6366F1',
                     pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4
+                    pointRadius: 5
                 }]
             },
             options: {
@@ -149,22 +244,22 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Growth Value'
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
                         }
                     },
                     x: {
-                        title: {
-                            display: true,
-                            text: 'Month'
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
                         }
                     }
                 },
                 plugins: {
                     legend: {
                         display: true,
-                        position: 'top'
+                        labels: {
+                            color: '#ffffff'
+                        }
                     }
                 }
             }

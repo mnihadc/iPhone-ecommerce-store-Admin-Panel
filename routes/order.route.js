@@ -11,6 +11,6 @@ const router = express.Router();
 router.get("/order-mangements", verifyToken, getOrders);
 router.get("/sales-reports", verifyToken, getSalesResportPage);
 router.post("/create-coupon", verifyToken, CreateCoupons);
-router.delete("/delete-coupon/:id", DeleteCoupons);
+router.delete("/delete-coupon/:id", verifyToken, DeleteCoupons);
 
 module.exports = router;

@@ -13,11 +13,13 @@ const Login = async (req, res, next) => {
     if (!admin) {
       return res.status(400).json({ error: "Invalid email" });
     }
+
     const isPasswordMatch = await bcrypt.compare(password, admin.password);
 
     if (!isPasswordMatch) {
       return res.status(400).json({ error: "Invalid password" });
     }
+
     admin.lastLogin = new Date();
     await admin.save();
 
@@ -26,14 +28,15 @@ const Login = async (req, res, next) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
+
     res.cookie("authToken", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: "lax",
       maxAge: 3600000,
     });
 
-    res.redirect("/");
+    return res.status(200).json({ message: "Login successful" });
   } catch (error) {
     console.error(error);
     next(error);

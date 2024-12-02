@@ -171,34 +171,40 @@
         </form>
     </div>
 </body>
+
 <script>
     const form = document.querySelector(".formLogin");
     form.addEventListener("submit", async (event) => {
-        event.preventDefault(); // Prevent the form from submitting normally
+        event.preventDefault();
 
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         const errorMessageDiv = document.getElementById("error-message");
 
-        // Make a POST request with email and password
-        const response = await fetch("/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-        });
+        try {
+            const response = await fetch("/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            });
 
-        const data = await response.json();
+            const data = await response.json();
 
-        if (response.status === 400 && data.error) {
-            errorMessageDiv.textContent = data.error; // Display the error message
-            errorMessageDiv.style.display = "block"; // Show the error message
-        } else if (response.ok) {
-            // Redirect to the dashboard or another page on success
-            window.location.href = "/";
+            if (response.ok) {
+                window.location.href = "/";
+            } else {
+                errorMessageDiv.textContent = data.error || "Login failed. Please try again.";
+                errorMessageDiv.style.display = "block";
+            }
+        } catch (error) {
+            errorMessageDiv.textContent = "An unexpected error occurred. Please try again.";
+            errorMessageDiv.style.display = "block";
+            console.error("Error during login:", error);
         }
     });
+
 </script>
 
 </html>
