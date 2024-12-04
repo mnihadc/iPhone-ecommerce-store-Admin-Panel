@@ -16,14 +16,20 @@ const CreateProduct = async (req, res, next) => {
       releaseDate,
       colorName,
       colorCode,
-      specifications,
+      specifications, // array of strings like "Processor: A16 Bionic"
       colorImages,
     } = req.body;
+
+    // Convert specifications array of strings into key-value objects
+    const parsedSpecifications = specifications.map((spec) => {
+      const [key, value] = spec.split(":").map((s) => s.trim());
+      return { key, value };
+    });
 
     const colorOptions = colorName.map((name, index) => ({
       colorName: name,
       colorCode: colorCode[index],
-      colorImage: colorImages[index] || "",
+      colorImage: colorImages[index] || "", // If no image is provided, set an empty string
     }));
 
     const productImages = req.body.productImages || [];
@@ -38,12 +44,13 @@ const CreateProduct = async (req, res, next) => {
       releaseDate,
       colorOptions,
       productImages,
-      specifications,
+      specifications: parsedSpecifications,
     });
 
     await newProduct.save();
     res.redirect("/product/create-product");
   } catch (error) {
+    console.error("Error creating product:", error);
     next(error);
   }
 };

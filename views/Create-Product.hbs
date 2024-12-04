@@ -10,6 +10,7 @@
         body {
             background: #1d1c1c;
             font-family: 'Arial', sans-serif;
+            color: #fff;
         }
 
         .container {
@@ -18,6 +19,7 @@
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
             max-width: 900px;
+            margin: 40px auto;
         }
 
         h3 {
@@ -36,7 +38,6 @@
 
         .form-control:focus {
             border-color: #007bff;
-
             box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
         }
 
@@ -52,32 +53,21 @@
         }
 
         .add-color-btn,
-        .add-spec-btn {
+        .add-spec-btn,
+        .btn-info {
             background-color: #28a745;
             color: white;
             font-size: 14px;
-            padding: 8px;
+            padding: 8px 12px;
             border-radius: 8px;
             cursor: pointer;
             margin-top: 10px;
         }
 
         .add-color-btn:hover,
-        .add-spec-btn:hover {
+        .add-spec-btn:hover,
+        .btn-info:hover {
             background-color: #218838;
-        }
-
-        /* Ensuring all backgrounds in the container are dark */
-        .container,
-        .container .form-group,
-        .container .form-control,
-        .container input[type="file"],
-        .container input[type="text"],
-        .container select,
-        .container textarea {
-            background-color: #333 !important;
-            color: #fff !important;
-            border-color: #555 !important;
         }
     </style>
 </head>
@@ -93,6 +83,7 @@
                         <label for="productName">Product Name</label>
                         <input type="text" class="form-control" id="productName" name="name" required>
                     </div>
+
                     <div class="form-group">
                         <label for="category">Category</label>
                         <select class="form-control" id="category" name="category" required>
@@ -104,18 +95,22 @@
                             <option value="Accessories">Accessories</option>
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label for="description">Description</label>
                         <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
                     </div>
+
                     <div class="form-group">
                         <label for="price">Price</label>
                         <input type="number" class="form-control" id="price" name="price" required min="0">
                     </div>
+
                     <div class="form-group">
                         <label for="offerPrice">Offer Price (Optional)</label>
                         <input type="number" class="form-control" id="offerPrice" name="offerPrice" min="0">
                     </div>
+
                     <div class="form-group">
                         <label for="stock">Stock</label>
                         <input type="number" class="form-control" id="stock" name="stock" required min="0">
@@ -129,9 +124,6 @@
                         </div>
                         <button type="button" class="btn btn-info mt-2" id="addProductImage">Add More Images</button>
                     </div>
-
-
-
                 </div>
 
                 <!-- Right Column -->
@@ -151,43 +143,21 @@
                         <button type="button" class="add-color-btn" id="addColor">Add More Colors</button>
                     </div>
 
-
                     <div class="form-group">
                         <label for="specifications">Specifications</label>
-                        <div class="specifications-group">
+                        <div id="specificationsContainer">
                             <div class="form-group">
-                                <input type="text" class="form-control" name="specifications[processor]"
-                                    placeholder="Processor" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="specifications[memory]"
-                                    placeholder="Memory" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="specifications[storage]"
-                                    placeholder="Storage" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="specifications[displaySize]"
-                                    placeholder="Display Size" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="specifications[camera]"
-                                    placeholder="Camera" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="specifications[battery]"
-                                    placeholder="Battery" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="specifications[connectivity]"
-                                    placeholder="Connectivity" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="releaseDate">Release Date</label>
-                                <input type="date" class="form-control" id="releaseDate" name="releaseDate">
+                                <input type="text" class="form-control mt-2" name="specifications[]"
+                                    placeholder="Specification (e.g., Processor: A16 Bionic)" required>
                             </div>
                         </div>
+                        <button type="button" class="add-spec-btn" id="addSpecification">Add More
+                            Specifications</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="releaseDate">Release Date</label>
+                        <input type="date" class="form-control" id="releaseDate" name="releaseDate">
                     </div>
                 </div>
             </div>
@@ -200,27 +170,34 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
         // Dynamically add more product image URL input fields
-        // Dynamically add more product image URL input fields
         $("#addProductImage").click(function () {
-            const productImageInput = `
-        <input type="text" class="form-control mt-2" name="productImages[]" placeholder="Enter image URL" required>
-    `;
-            $("#productImagesContainer").append(productImageInput);
+            $("#productImagesContainer").append(`
+                <input type="text" class="form-control mt-2" name="productImages[]"
+                    placeholder="Enter image URL" required>
+            `);
         });
-
 
         // Dynamically add more color options
         $("#addColor").click(function () {
-            const colorHtml = `
-        <div class="color-option mt-3">
-            <input type="text" class="form-control mt-2" name="colorName[]" placeholder="Color Name" required>
-            <input type="text" class="form-control mt-2" name="colorCode[]" placeholder="Color Code" required>
-            <input type="text" class="form-control mt-2" name="colorImages[]" placeholder="Enter image URL">
-        </div>
-    `;
-            $("#colorOptions").append(colorHtml);
+            $("#colorOptions").append(`
+                <div class="color-option mt-3">
+                    <input type="text" class="form-control mt-2" name="colorName[]" placeholder="Color Name" required>
+                    <input type="text" class="form-control mt-2" name="colorCode[]" placeholder="Color Code" required>
+                    <input type="text" class="form-control mt-2" name="colorImages[]"
+                        placeholder="Enter image URL">
+                </div>
+            `);
         });
 
+        // Dynamically add more specification fields
+        $("#addSpecification").click(function () {
+            $("#specificationsContainer").append(`
+                <div class="form-group">
+                    <input type="text" class="form-control mt-2" name="specifications[]"
+                        placeholder="Specification (e.g., Processor: A16 Bionic)" required>
+                </div>
+            `);
+        });
     </script>
 </body>
 

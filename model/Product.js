@@ -12,13 +12,13 @@ const productSchema = new mongoose.Schema({
     {
       colorName: { type: String, required: true },
       colorCode: { type: String, required: true },
-      colorImage: { type: String },
+      colorImage: { type: String, default: "" }, // Default value for colorImage if not provided
     },
   ],
   specifications: [
     {
       key: { type: String, required: true }, // e.g., "Processor"
-      value: { type: mongoose.Schema.Types.Mixed, required: true }, // e.g., "Intel Core i7"
+      value: { type: String, required: true }, // e.g., "Intel Core i7"
     },
   ],
   releaseDate: { type: Date },
