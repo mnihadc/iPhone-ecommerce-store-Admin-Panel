@@ -162,12 +162,19 @@
                     <div class="form-group">
                         <label for="specifications">Specifications</label>
                         <div class="specifications-group">
-                            {{#each product.specifications}}
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="specifications[{{@key}}]" value="{{this}}"
-                                    placeholder="{{@key}}" required>
+                            <div id="specifications">
+                                {{#each product.specifications}}
+                                <div class="specification mt-2">
+                                    <input type="text" class="form-control mt-2" name="specifications[{{@index}}][key]"
+                                        value="{{this.key}}" placeholder="Specification Key" required>
+                                    <input type="text" class="form-control mt-2"
+                                        name="specifications[{{@index}}][value]" value="{{this.value}}"
+                                        placeholder="Specification Value" required>
+                                </div>
+                                {{/each}}
                             </div>
-                            {{/each}}
+                            <button type="button" class="add-spec-btn" id="addSpec">Add More Specifications</button>
+
                             <div class="form-group">
                                 <label for="releaseDate">Release Date</label>
                                 <input type="date" class="form-control" id="releaseDate" name="releaseDate"
@@ -198,6 +205,15 @@
                 </div>`;
             $("#colorOptions").append(colorHtml);
         });
+        $("#addSpec").click(function () {
+            const specHtml = `
+        <div class="specification mt-2">
+            <input type="text" class="form-control mt-2" name="specifications[][key]" placeholder="Specification Key" required>
+            <input type="text" class="form-control mt-2" name="specifications[][value]" placeholder="Specification Value" required>
+        </div>`;
+            $("#specifications").append(specHtml);
+        });
+
     </script>
 </body>
 
