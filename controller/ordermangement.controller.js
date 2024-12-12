@@ -135,40 +135,62 @@ const getSalesResportPage = async (req, res, next) => {
 const CreateCoupons = async (req, res, next) => {
   try {
     const { code, validUntil, discountPercentage } = req.body;
-    console.log(discountPercentage);
 
-    // Check if all fields are provided
-    if (!code || !validUntil || !discountPercentage) {
+    // Trim input values
+    const trimmedCode = code?.trim();
+    const trimmedDiscount = parseFloat(discountPercentage);
+
+    // Validate required fields
+    if (!trimmedCode || !validUntil || !discountPercentage) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
-    // Validate discountPercentage is a number between 1 and 100
-    const discount = parseFloat(discountPercentage);
-    if (isNaN(discount) || discount < 1 || discount > 100) {
+    // Validate discount percentage
+    if (
+      isNaN(trimmedDiscount) ||
+      trimmedDiscount < 1 ||
+      trimmedDiscount > 100
+    ) {
       return res.status(400).json({
         message: "Discount percentage must be a number between 1 and 100.",
       });
     }
 
-    // Check if coupon code already exists
-    const existingCoupon = await Coupon.findOne({ code });
+    // Validate validUntil date
+    const validUntilDate = new Date(validUntil);
+    if (isNaN(validUntilDate.getTime()) || validUntilDate <= new Date()) {
+      return res
+        .status(400)
+        .json({ message: "Valid until must be a valid future date." });
+    }
+
+    // Check for existing coupon code
+    const existingCoupon = await Coupon.findOne({ code: trimmedCode });
     if (existingCoupon) {
       return res.status(400).json({ message: "Coupon code already exists." });
     }
 
-    // Create new coupon
+    // Create a new coupon
     const coupon = new Coupon({
-      code: code.trim(),
-      validUntil: new Date(validUntil),
-      discountPercentage: discount,
+      code: trimmedCode,
+      validUntil: validUntilDate,
+      discountPercentage: trimmedDiscount,
     });
 
     await coupon.save();
 
-    res.status(201).json({ message: "Coupon created successfully." });
+    res.status(201).json({
+      message: "Coupon created successfully.",
+      coupon: {
+        id: coupon._id,
+        code: coupon.code,
+        discountPercentage: coupon.discountPercentage,
+        validUntil: coupon.validUntil,
+      },
+    });
   } catch (error) {
     console.error("Error creating coupon:", error);
-    next(error);
+    next(error); // Pass error to error-handling middleware
   }
 };
 
