@@ -431,26 +431,47 @@
 
         <hr>
         <h4 class="text-center">Create New Coupon</h4>
-        <form id="createCouponForm">
+        <form id="createCouponForm" method="POST" action="/coupons/create">
             <div class="form-group">
-                <label for="couponCode">Coupon Code: </label>
+                <label for="couponName">Coupon Name:</label>
+                <input type="text" id="couponName" name="name" class="form-control" placeholder="Enter coupon name"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="couponCode">Coupon Code:</label>
                 <input type="text" id="couponCode" name="code" class="form-control" placeholder="Enter coupon code"
                     required>
             </div>
 
             <div class="form-group">
-                <label for="validUntil">Valid Until: </label>
+                <label for="validUntil">Valid Until:</label>
                 <input type="date" id="validUntil" name="validUntil" class="form-control" required>
             </div>
+
             <div class="form-group">
                 <label for="discountPercentage">Discount Percentage:</label>
                 <input type="number" id="discountPercentage" name="discountPercentage" class="form-control" min="1"
                     max="100" placeholder="Enter discount percentage" required>
             </div>
+
+            <div class="form-group">
+                <label for="orderRange">Minimum Order Items:</label>
+                <input type="number" id="orderRange" name="orderRange" class="form-control" min="0"
+                    placeholder="Enter minimum order items">
+            </div>
+
+            <div class="form-group">
+                <label for="totalOrderPriceRange">Minimum Order Price:</label>
+                <input type="number" id="totalOrderPriceRange" name="totalOrderPriceRange" class="form-control" min="0"
+                    placeholder="Enter minimum order price">
+            </div>
+
             <div class="form-group text-center">
                 <button type="submit" class="save-button">Create Coupon</button>
             </div>
         </form>
+
         <hr>
     </div>
 
