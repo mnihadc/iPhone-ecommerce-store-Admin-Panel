@@ -673,6 +673,29 @@
             }
         });
 
+        function deleteCoupon(couponId) {
+            if (confirm("Are you sure you want to delete this coupon?")) {
+                fetch(`/order/delete-coupon/${couponId}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Coupon deleted successfully.");
+                            location.reload();
+                        } else {
+                            alert(data.message || "Failed to delete coupon.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("An error occurred.");
+                    });
+            }
+        }
     </script>
 
 </body>
