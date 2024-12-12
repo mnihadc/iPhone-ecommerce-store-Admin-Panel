@@ -105,7 +105,8 @@ const getSettingsPage = async (req, res, next) => {
     const profileImage = adminData.profileImage || "/path/to/default-image.jpg";
     const bannerImage =
       adminData.firstPageBannerImageURL || "/path/to/default-image";
-    const coupons = await Coupon.find({});
+    const coupons = await Coupon.find({}).sort({ createdAt: -1 }); // Fetch coupons sorted by date
+
     res.render("Settings", {
       title: "Admin Settings",
       adminData,

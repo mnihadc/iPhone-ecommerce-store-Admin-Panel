@@ -398,36 +398,46 @@
         <hr>
         <div class="admin-table">
             <h3 class="text-center">All Coupons</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Coupon Code</th>
-                        <th>Created At</th>
-                        <th>Expires At</th>
-                        <th>Discount (%)</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="couponsTableBody">
-                    {{#if coupons}}
-                    {{#each coupons}}
-                    <tr id="coupon-row-{{this._id}}">
-                        <td>{{this.code}}</td>
-                        <td>{{this.createdAt}}</td>
-                        <td>{{this.validUntil}}</td>
-                        <td>{{this.discountPercentage}}%</td>
-                        <td>
-                            <button class="delete-button" onclick="deleteCoupon('{{this._id}}')">Delete</button>
-                        </td>
-                    </tr>
-                    {{/each}}
-                    {{else}}
-                    <p>No coupons available.</p>
-                    {{/if}}
-                </tbody>
-            </table>
-
+            <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Coupon Name</th>
+                            <th>Coupon Code</th>
+                            <th>Created At</th>
+                            <th>Expires At</th>
+                            <th>Discount (%)</th>
+                            <th>Minimum Items</th>
+                            <th>Minimum Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="couponsTableBody">
+                        {{#if coupons.length}}
+                        {{#each coupons}}
+                        <tr id="coupon-row-{{this._id}}">
+                            <td>{{this.name}}</td>
+                            <td>{{this.code}}</td>
+                            <td>{{this.createdAt}}</td>
+                            <td>{{this.validUntil}}</td>
+                            <td>{{this.discountPercentage}}%</td>
+                            <td>{{this.orderRange}}</td>
+                            <td>${{this.totalOrderPriceRange}}</td>
+                            <td>
+                                <button class="delete-button" onclick="deleteCoupon('{{this._id}}')">Delete</button>
+                            </td>
+                        </tr>
+                        {{/each}}
+                        {{else}}
+                        <tr>
+                            <td colspan="7" class="text-center">No coupons available.</td>
+                        </tr>
+                        {{/if}}
+                    </tbody>
+                </table>
+            </div>
         </div>
+
 
         <hr>
         <h4 class="text-center">Create New Coupon</h4>
