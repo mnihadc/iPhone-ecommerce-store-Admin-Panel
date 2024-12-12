@@ -134,15 +134,25 @@ const getSalesResportPage = async (req, res, next) => {
 
 const CreateCoupons = async (req, res, next) => {
   try {
-    const { code, validUntil, discountPercentage } = req.body;
+    const {
+      name,
+      code,
+      validUntil,
+      discountPercentage,
+      orderRange = 0,
+      totalOrderPriceRange = 0,
+    } = req.body;
 
-    // Trim input values
+    const trimmedName = name?.trim();
     const trimmedCode = code?.trim();
     const trimmedDiscount = parseFloat(discountPercentage);
 
     // Validate required fields
-    if (!trimmedCode || !validUntil || !discountPercentage) {
-      return res.status(400).json({ message: "All fields are required." });
+    if (!trimmedName || !trimmedCode || !validUntil || !discountPercentage) {
+      return res.status(400).json({
+        message:
+          "All fields (name, code, validUntil, discountPercentage) are required.",
+      });
     }
 
     // Validate discount percentage
@@ -156,12 +166,26 @@ const CreateCoupons = async (req, res, next) => {
       });
     }
 
+    // Validate orderRange and totalOrderPriceRange
+    if (orderRange < 0 || isNaN(orderRange)) {
+      return res
+        .status(400)
+        .json({ message: "Order range must be a non-negative number." });
+    }
+    if (totalOrderPriceRange < 0 || isNaN(totalOrderPriceRange)) {
+      return res
+        .status(400)
+        .json({
+          message: "Total order price range must be a non-negative number.",
+        });
+    }
+
     // Validate validUntil date
     const validUntilDate = new Date(validUntil);
     if (isNaN(validUntilDate.getTime()) || validUntilDate <= new Date()) {
       return res
         .status(400)
-        .json({ message: "Valid until must be a valid future date." });
+        .json({ message: "Valid until date must be in the future." });
     }
 
     // Check for existing coupon code
@@ -170,27 +194,25 @@ const CreateCoupons = async (req, res, next) => {
       return res.status(400).json({ message: "Coupon code already exists." });
     }
 
-    // Create a new coupon
+    // Create coupon
     const coupon = new Coupon({
+      name: trimmedName,
       code: trimmedCode,
       validUntil: validUntilDate,
       discountPercentage: trimmedDiscount,
+      orderRange,
+      totalOrderPriceRange,
     });
 
     await coupon.save();
 
     res.status(201).json({
       message: "Coupon created successfully.",
-      coupon: {
-        id: coupon._id,
-        code: coupon.code,
-        discountPercentage: coupon.discountPercentage,
-        validUntil: coupon.validUntil,
-      },
+      coupon,
     });
   } catch (error) {
     console.error("Error creating coupon:", error);
-    next(error); // Pass error to error-handling middleware
+    next(error);
   }
 };
 

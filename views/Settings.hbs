@@ -602,11 +602,18 @@
         document.getElementById("createCouponForm").addEventListener("submit", async function (event) {
             event.preventDefault();
 
+            const name = document.getElementById("couponName").value.trim();
             const code = document.getElementById("couponCode").value.trim();
             const validUntil = document.getElementById("validUntil").value;
             const discountPercentage = parseInt(document.getElementById("discountPercentage").value);
+            const orderRange = parseInt(document.getElementById("orderRange").value || 0);
+            const totalOrderPriceRange = parseFloat(document.getElementById("totalOrderPriceRange").value || 0);
 
             // Client-side validation
+            if (!name) {
+                alert("Coupon name is required.");
+                return;
+            }
             if (!code) {
                 alert("Coupon code is required.");
                 return;
@@ -619,12 +626,27 @@
                 alert("Discount percentage must be a number between 1 and 100.");
                 return;
             }
+            if (isNaN(orderRange) || orderRange < 0) {
+                alert("Minimum order items must be a non-negative number.");
+                return;
+            }
+            if (isNaN(totalOrderPriceRange) || totalOrderPriceRange < 0) {
+                alert("Minimum order price must be a non-negative number.");
+                return;
+            }
 
             try {
                 const response = await fetch("/order/create-coupon", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ code, validUntil, discountPercentage })
+                    body: JSON.stringify({
+                        name,
+                        code,
+                        validUntil,
+                        discountPercentage,
+                        orderRange,
+                        totalOrderPriceRange,
+                    }),
                 });
 
                 const result = await response.json();
@@ -641,31 +663,7 @@
             }
         });
 
-        async function deleteCoupon(couponId) {
-            if (confirm("Are you sure you want to delete this coupon?")) {
-                try {
-                    const response = await fetch(`/order/delete-coupon/${couponId}`, {
-                        method: "DELETE",
-                        headers: { "Content-Type": "application/json" },
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        alert("Coupon deleted successfully.");
-                        document.getElementById(`coupon-${couponId}`).remove(); // Remove the coupon from the DOM
-                    } else {
-                        alert(data.message || "Failed to delete coupon.");
-                    }
-                } catch (error) {
-                    console.error("Error:", error);
-                    alert("An error occurred.");
-                }
-            }
-        }
-
     </script>
-
 
 </body>
 
