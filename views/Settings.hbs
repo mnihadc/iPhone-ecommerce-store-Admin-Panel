@@ -602,12 +602,20 @@
         document.getElementById("createCouponForm").addEventListener("submit", async function (event) {
             event.preventDefault();
 
-            const code = document.getElementById("couponCode").value;
+            const code = document.getElementById("couponCode").value.trim();
             const validUntil = document.getElementById("validUntil").value;
-            const discountPercentage = document.getElementById("discountPercentage").value;
+            const discountPercentage = parseInt(document.getElementById("discountPercentage").value);
 
             // Client-side validation
-            if (discountPercentage < 1 || discountPercentage > 100 || isNaN(discountPercentage)) {
+            if (!code) {
+                alert("Coupon code is required.");
+                return;
+            }
+            if (!validUntil || new Date(validUntil) <= new Date()) {
+                alert("Valid until date must be in the future.");
+                return;
+            }
+            if (isNaN(discountPercentage) || discountPercentage < 1 || discountPercentage > 100) {
                 alert("Discount percentage must be a number between 1 and 100.");
                 return;
             }
@@ -615,9 +623,7 @@
             try {
                 const response = await fetch("/order/create-coupon", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ code, validUntil, discountPercentage })
                 });
 
@@ -625,7 +631,7 @@
 
                 if (response.ok) {
                     alert("Coupon created successfully.");
-                    location.reload();
+                    location.reload(); // Reload page to reflect the new coupon
                 } else {
                     alert(result.message || "Failed to create coupon.");
                 }
@@ -635,27 +641,26 @@
             }
         });
 
-        function deleteCoupon(couponId) {
+        async function deleteCoupon(couponId) {
             if (confirm("Are you sure you want to delete this coupon?")) {
-                fetch(`/order/delete-coupon/${couponId}`, {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert("Coupon deleted successfully.");
-                            location.reload();
-                        } else {
-                            alert(data.message || "Failed to delete coupon.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        alert("An error occurred.");
+                try {
+                    const response = await fetch(`/order/delete-coupon/${couponId}`, {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" },
                     });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert("Coupon deleted successfully.");
+                        document.getElementById(`coupon-${couponId}`).remove(); // Remove the coupon from the DOM
+                    } else {
+                        alert(data.message || "Failed to delete coupon.");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    alert("An error occurred.");
+                }
             }
         }
 
