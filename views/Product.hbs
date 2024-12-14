@@ -98,20 +98,40 @@
         }
 
         function deleteProduct(productId) {
-            fetch(`/product/delete-product/${productId}`, {
-                method: 'POST'
-            })
-                .then(response => {
-                    if (response.ok) {
-                        alert("Product is Deleted")
-                        window.location.href = '/product/get-product';
-                    } else {
-                        alert('Failed to delete product');
-                    }
-                });
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/product/delete-product/${productId}`, {
+                        method: 'POST'
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'The product has been deleted.',
+                                    'success'
+                                ).then(() => {
+                                    window.location.href = '/product/get-product';
+                                });
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    'Failed to delete the product.',
+                                    'error'
+                                );
+                            }
+                        });
+                }
+            });
         }
-
     </script>
+
 
 </body>
 

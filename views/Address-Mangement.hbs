@@ -148,10 +148,18 @@
             {{/if}}
         </div>
     </div>
-
     <script>
         async function deleteAddress(addressId) {
-            if (confirm("Are you sure you want to delete this address?")) {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it'
+            });
+
+            if (result.isConfirmed) {
                 try {
                     const response = await fetch(`/user/delete-address/${addressId}`, {
                         method: "DELETE",
@@ -160,21 +168,34 @@
                         }
                     });
 
-                    const result = await response.json();
+                    const responseData = await response.json();
 
                     if (response.ok) {
-                        alert("Address deleted successfully.");
+                        Swal.fire(
+                            'Deleted!',
+                            'Your address has been deleted.',
+                            'success'
+                        );
                         location.reload();
                     } else {
-                        alert(result.message || "Failed to delete address.");
+                        Swal.fire(
+                            'Failed!',
+                            responseData.message || 'Failed to delete address.',
+                            'error'
+                        );
                     }
                 } catch (error) {
                     console.error("Error:", error);
-                    alert("An error occurred.");
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred.',
+                        'error'
+                    );
                 }
             }
         }
     </script>
+
 </body>
 
 </html>
