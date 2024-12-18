@@ -145,7 +145,7 @@
                     </div>
                     <div class="card-footer">
                         <button class="btn btn-light btn-sm" onclick="editStock({{@index}})">Edit</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteStock('{{this.name}}')">Delete</button>
+                        <button onclick="deleteProduct('{{this._id}}')" class="btn btn-danger btn-sm">Delete</button>
                     </div>
                 </div>
             </div>
@@ -196,14 +196,42 @@
             editButton.innerText = "Edit";
             editButton.setAttribute('onclick', `editStock(${id})`);
         }
-
-        function deleteStock(productName) {
-            if (confirm('Are you sure you want to delete: ' + productName + '?')) {
-                alert(productName + ' has been deleted.');
-            }
+    </script>
+    <script>
+        function deleteProduct(productId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/product/delete-product/${productId}`, {
+                        method: 'POST'
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'The product has been deleted.',
+                                    'success'
+                                ).then(() => {
+                                    window.location.href = '/product/stock-managment';
+                                });
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    'Failed to delete the product.',
+                                    'error'
+                                );
+                            }
+                        });
+                }
+            });
         }
     </script>
-
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
