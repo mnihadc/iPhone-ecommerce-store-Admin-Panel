@@ -13,8 +13,25 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
     minlength: 8,
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  profileImage: {
+    type: String,
+  },
+  otp: {
+    type: String,
+  },
+  otpExpire: {
+    type: Date,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 
