@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        /* Header styles */
+        .header {
+            background: linear-gradient(to right, #007bff, #0056b3);
+            color: white;
+            padding: 30px 15px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        .card {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .card-text {
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        .card-footer {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+        }
+
+        .card-footer button {
+            font-size: 0.9rem;
+            margin: 0 5px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Display 4 cards per row for large screens */
+        @media (min-width: 992px) {
+            .row .col-md-3 {
+                max-width: 25%;
+            }
+
+            .card-img-laptop {
+                height: 200px;
+                /* Larger image for laptop */
+            }
+
+            .card-img-phone {
+                height: 150px;
+                /* Fixed height for iPhone images */
+            }
+        }
+
+        /* Ensure it doesn't adjust for mobile or tablet sizes */
+        @media (max-width: 991px) {
+            .container {
+                display: none;
+                /* Hides the page on smaller screens */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Stock Management System</h1>
+        <p>Efficiently manage and track your inventory to ensure a seamless supply chain.</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search Stock Items"
+                onkeyup="searchStock()">
+        </div>
+
+        <!-- Stock Cards -->
+        <div class="row" id="stockContainer">
+            <!-- Sample Cards -->
+            <div class="col-md-3 mb-4 stock-card" data-name="Gaming Laptop" data-category="Electronics">
+                <div class="card">
+                    <img src="https://via.placeholder.com/300x150" alt="Gaming Laptop"
+                        class="card-img-top card-img-laptop">
+                    <div class="card-body">
+                        <h5 class="card-title">Gaming Laptop</h5>
+                        <p class="card-text"><strong>Category:</strong> Electronics</p>
+                        <p class="card-text"><strong>Stock:</strong> <span class="stock-value" id="stock-1">30</span></p>
+                        <p class="card-text"><strong>Price:</strong> $<span class="price-value" id="price-1">1499</span></p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-light btn-sm" onclick="editStock(1)">Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteStock('Gaming Laptop')">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- You can repeat similar blocks for other items -->
+            <div class="col-md-3 mb-4 stock-card" data-name="Laptop Accessories" data-category="Accessories">
+                <div class="card">
+                    <img src="https://via.placeholder.com/300x150" alt="Laptop Accessories"
+                        class="card-img-top card-img-laptop">
+                    <div class="card-body">
+                        <h5 class="card-title">Laptop Accessories</h5>
+                        <p class="card-text"><strong>Category:</strong> Accessories</p>
+                        <p class="card-text"><strong>Stock:</strong> <span class="stock-value" id="stock-2">80</span></p>
+                        <p class="card-text"><strong>Price:</strong> $<span class="price-value" id="price-2">49</span></p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-light btn-sm" onclick="editStock(2)">Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteStock('Laptop Accessories')">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional cards can go here -->
+        </div>
+    </div>
+
+    <script>
+        function searchStock() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.stock-card');
+            cards.forEach(card => {
+                const name = card.dataset.name.toLowerCase();
+                const category = card.dataset.category.toLowerCase();
+                card.style.display = (name.includes(searchValue) || category.includes(searchValue)) ? 'block' : 'none';
+            });
+        }
+
+        function editStock(id) {
+            const stockElement = document.getElementById('stock-' + id);
+            const priceElement = document.getElementById('price-' + id);
+
+            const currentStock = stockElement.innerText;
+            const currentPrice = priceElement.innerText;
+
+            // Create input fields for stock and price
+            stockElement.innerHTML = `<input type="number" value="${currentStock}" id="new-stock-${id}">`;
+            priceElement.innerHTML = `<input type="number" value="${currentPrice}" id="new-price-${id}">`;
+
+            // Change button text to Save
+            const editButton = document.querySelectorAll('.btn-light')[id - 1];
+            editButton.innerText = "Save";
+            editButton.setAttribute('onclick', `saveStock(${id})`);
+        }
+
+        function saveStock(id) {
+            const newStock = document.getElementById('new-stock-' + id).value;
+            const newPrice = document.getElementById('new-price-' + id).value;
+
+            // Update the stock and price values
+            document.getElementById('stock-' + id).innerText = newStock;
+            document.getElementById('price-' + id).innerText = newPrice;
+
+            // Change button text back to Edit
+            const editButton = document.querySelectorAll('.btn-light')[id - 1];
+            editButton.innerText = "Edit";
+            editButton.setAttribute('onclick', `editStock(${id})`);
+        }
+
+        function deleteStock(productName) {
+            if (confirm('Are you sure you want to delete: ' + productName + '?')) {
+                alert(productName + ' has been deleted.');
+            }
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
