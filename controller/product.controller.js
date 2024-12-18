@@ -148,11 +148,26 @@ const deleteProduct = async (req, res, next) => {
     next(error);
   }
 };
-
 const StockManagmentPage = async (req, res, next) => {
   try {
+    // Fetch products from the database
     const products = await Product.find({});
-    res.render("Stock-Management", { title: "Stock Management", products });
+
+    // Transform the data to include only the required fields
+    const transformedProducts = products.map((product) => ({
+      _id: product._id,
+      name: product.name,
+      category: product.category,
+      price: product.price,
+      stock: product.stock,
+      image: product.productImages[0], // Get the first image
+    }));
+
+    // Pass the transformed data to the template
+    res.render("StockManagment", {
+      title: "Stock Management",
+      products: transformedProducts,
+    });
   } catch (error) {
     next(error);
   }
