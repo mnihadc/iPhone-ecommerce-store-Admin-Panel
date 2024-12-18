@@ -19,6 +19,6 @@ router.get("/edit-product/:id", verifyToken, editProductPage);
 router.post("/update-product/:id", verifyToken, updateProduct);
 router.post("/delete-product/:id", verifyToken, deleteProduct);
 router.get("/stock-managment", verifyToken, StockManagmentPage);
-router.post("/product/update-stock", updateStockManagment);
+router.post("/update-stock", updateStockManagment);
 
 module.exports = router;

@@ -144,7 +144,8 @@
                                 id="price-{{@index}}">{{this.price}}</span></p>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-light btn-sm" onclick="editStock({{@index}})">Edit</button>
+                        <button class="btn btn-light btn-sm"
+                            onclick="editStock({{@index}}, '{{this._id}}')">Edit</button>
                         <button onclick="deleteProduct('{{this._id}}')" class="btn btn-danger btn-sm">Delete</button>
                     </div>
                 </div>
@@ -163,8 +164,10 @@
                 card.style.display = (name.includes(searchValue) || category.includes(searchValue)) ? 'block' : 'none';
             });
         }
-
-        function editStock(id) {
+    </script>
+    <script>
+        function editStock(id, productId) {
+            // Now you have the productId
             const stockElement = document.getElementById('stock-' + id);
             const priceElement = document.getElementById('price-' + id);
 
@@ -173,28 +176,53 @@
 
             // Create input fields for stock and price inside the edit-fields div
             stockElement.innerHTML = `<div class="edit-fields">
-                                        <input type="number" value="${currentStock}" id="new-stock-${id}">
-                                        <input type="number" value="${currentPrice}" id="new-price-${id}">
-                                      </div>`;
+                                <input type="number" value="${currentStock}" id="new-stock-${id}">
+                                <input type="number" value="${currentPrice}" id="new-price-${id}">
+                              </div>`;
 
             // Change button text to Save
             const editButton = document.querySelectorAll('.btn-light')[id];
             editButton.innerText = "Save";
-            editButton.setAttribute('onclick', `saveStock(${id})`);
+            editButton.setAttribute('onclick', `saveStock(${id}, '${productId}')`);
         }
 
-        function saveStock(id) {
+        function saveStock(id, productId) {
             const newStock = document.getElementById('new-stock-' + id).value;
             const newPrice = document.getElementById('new-price-' + id).value;
 
-            // Update the stock and price values
+            // Update the stock and price values locally
             document.getElementById('stock-' + id).innerText = newStock;
             document.getElementById('price-' + id).innerText = newPrice;
 
             // Change button text back to Edit
             const editButton = document.querySelectorAll('.btn-light')[id];
             editButton.innerText = "Edit";
-            editButton.setAttribute('onclick', `editStock(${id})`);
+            editButton.setAttribute('onclick', `editStock(${id}, '${productId}')`);
+
+            // Send the updated data to the backend to save
+            fetch('/product/update-stock', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    productId: productId, // Now passing dynamic product ID
+                    stock: newStock,
+                    price: newPrice,
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Product updated successfully') {
+                        Swal.fire('Updated!', 'The product has been updated.', 'success');
+                    } else {
+                        Swal.fire('Failed!', 'Failed to update the product.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating product:', error);
+                    Swal.fire('Failed!', 'Something went wrong. Please try again.', 'error');
+                });
         }
     </script>
     <script>
