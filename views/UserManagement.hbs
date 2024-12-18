@@ -93,6 +93,13 @@
         .btn-danger:hover {
             background-color: #e60000;
         }
+
+        .header {
+            background: linear-gradient(to right, #007bff, #0056b3);
+            color: white;
+            padding: 30px 15px;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -102,6 +109,10 @@
         <div class="search-bar">
             <h3>User Management</h3>
             <input type="text" id="searchInput" class="form-control" placeholder="Search Users" onkeyup="searchUsers()">
+        </div>
+        <div class="header">
+            <h1>{{title}}</h1>
+            <p>Manage users efficiently, control access, and monitor user activity to ensure seamless operations.</p>
         </div>
 
         <div class="table-container">

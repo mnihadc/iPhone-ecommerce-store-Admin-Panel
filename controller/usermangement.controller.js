@@ -5,7 +5,6 @@ const getUserMangementPage = async (req, res) => {
   try {
     const users = await User.find({}).lean(); // Use `.lean()` for plain JS objects
     // Format the `createdAt` field for each user
-    console.log(users);
 
     const formattedUsers = users.map((user) => {
       return {

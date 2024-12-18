@@ -10,10 +10,14 @@
 
 <body>
     <div class="container">
-        <h1>Admin Order Management</h1>
+        <div class="header">
+            <h1>{{title}}</h1>
+            <p>Manage customer orders, track statuses, and ensure timely fulfillment for a seamless experience.</p>
+        </div>
+
 
         <!-- Search Bar -->
-        <div class="search-bar">
+        <div class="search-bar pt-4">
             <input type="text" id="searchInput" placeholder="Search by Order ID, Username, or Email"
                 onkeyup="filterTable()">
         </div>

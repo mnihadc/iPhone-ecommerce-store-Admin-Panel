@@ -7,13 +7,24 @@
     <title>Admin Panel - Products</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
 </head>
+<style>
+    .header {
+        background: linear-gradient(to right, #007bff, #0056b3);
+        color: white;
+        padding: 30px 15px;
+        text-align: center;
+    }
+</style>
 
 <body style="background: black;">
     <div class="container">
-        <h2 class="text-center" style="color: rgb(17, 127, 158);">Product List</h2>
+        <div class="header">
+            <h1>{{title}}</h1>
+            <p>Efficiently manage products, update details, and track inventory to streamline your operations.</p>
+        </div>
 
         <!-- Search Bar -->
-        <div class="form-group">
+        <div class="form-group p-2 pt-4">
             <input type="text" class="form-control" id="searchBar" placeholder="Search products..."
                 onkeyup="searchProducts()">
         </div>

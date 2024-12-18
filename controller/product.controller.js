@@ -69,7 +69,7 @@ const getProductPage = async (req, res, next) => {
     }
   });
   res.render("Product", {
-    title: "Product Details",
+    title: "Product-Management",
     isProductPage: true,
     products: productData,
   });
