@@ -149,6 +149,15 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
+const StockManagmentPage = async (req, res, next) => {
+  try {
+    const products = await Product.find({});
+    res.render("Stock-Management", { title: "Stock Management", products });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getCreateProductPage,
   CreateProduct,
@@ -156,4 +165,5 @@ module.exports = {
   editProductPage,
   updateProduct,
   deleteProduct,
+  StockManagmentPage,
 };
