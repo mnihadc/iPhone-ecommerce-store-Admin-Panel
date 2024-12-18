@@ -173,6 +173,31 @@ const StockManagmentPage = async (req, res, next) => {
   }
 };
 
+const updateStockManagment = async (req, res, next) => {
+  try {
+    const { productId, stock, price } = req.body; // Assuming you send stock and price via POST request
+
+    // Find the product by its ID and update stock and price
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { stock, price },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json({
+      message: "Product updated successfully",
+      product: updatedProduct,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   getCreateProductPage,
   CreateProduct,
@@ -181,4 +206,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   StockManagmentPage,
+  updateStockManagment,
 };
