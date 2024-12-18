@@ -3,17 +3,33 @@ const User = require("../model/User");
 
 const getUserMangementPage = async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).lean(); // Use `.lean()` for plain JS objects
+    // Format the `createdAt` field for each user
+    console.log(users);
+
+    const formattedUsers = users.map((user) => {
+      return {
+        ...user,
+        formattedCreatedAt: user.createdAt
+          ? new Date(user.createdAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          : "N/A",
+      };
+    });
     res.render("UserManagement", {
       title: "User Management",
       isUserManagementPage: true,
-      users,
+      users: formattedUsers, // Pass the formatted users to the template
     });
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).send("An error occurred");
   }
 };
+
 const deleteUser = async (req, res, next) => {
   try {
     const userId = req.params.id;

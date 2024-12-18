@@ -19,12 +19,17 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
+        .table-container {
+            max-height: 700px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
         table {
             width: 100%;
             margin-top: 20px;
-            border: 1px solid #ccc;
             border-collapse: collapse;
-            background: #000000;
         }
 
         th,
@@ -49,11 +54,31 @@
             color: #ccc;
         }
 
+        .profile-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
         .search-bar {
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .search-bar input {
+                width: 250px;
+                margin-top: 0;
+            }
         }
 
         .btn-danger {
@@ -76,30 +101,39 @@
     <div class="container">
         <div class="search-bar">
             <h3>User Management</h3>
-            <input type="text" id="searchInput" class="form-control" style="width: 250px;" placeholder="Search Users"
-                onkeyup="searchUsers()">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search Users" onkeyup="searchUsers()">
         </div>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="userTableBody">
-                {{#each users}}
-                <tr>
-                    <td>{{this._id}}</td>
-                    <td>{{this.username}}</td>
-                    <td>{{this.email}}</td>
-                    <td><button class="btn btn-danger" onclick="deleteUser('{{this._id}}')">Delete</button></td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Profile Image</th>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Created At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    {{#each users}}
+                    <tr>
+                        <td>
+                            <img src="{{this.profileImage}}" alt="Profile Image" class="profile-img">
+
+                        </td>
+                        <td>{{this._id}}</td>
+
+                        <td>{{this.username}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{this.formattedCreatedAt}}</td>
+                        <td><button class="btn btn-danger" onclick="deleteUser('{{this._id}}')">Delete</button></td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -136,13 +170,14 @@
             const searchValue = document.getElementById('searchInput').value.toLowerCase();
             const rows = document.querySelectorAll('#userTableBody tr');
             rows.forEach(row => {
-                const username = row.cells[1].innerText.toLowerCase();
-                const email = row.cells[2].innerText.toLowerCase();
+                const username = row.cells[2].innerText.toLowerCase();
+                const email = row.cells[3].innerText.toLowerCase();
                 row.style.display = (username.includes(searchValue) || email.includes(searchValue)) ? '' : 'none';
             });
         }
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
